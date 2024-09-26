@@ -30,7 +30,6 @@ void Map::updateMap(float camX, float camZ, Application& app)
     if (currentChunk.x != camX || currentChunk.z != camZ)
     {
         currentChunk = { camX, camZ };
-        std::cout << "CurrentChunk: " << currentChunk.x << ", " << currentChunk.z << std::endl;
         loadAreaChunks();
     }
 

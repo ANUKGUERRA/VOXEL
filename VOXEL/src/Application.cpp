@@ -12,7 +12,6 @@ Application::Application()
 	map.loadMap();
 }
 
-
 Application::~Application() {
 	glfwTerminate();
 }
@@ -49,20 +48,34 @@ void Application::setupOpenGL() {
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glfwSwapInterval(1);
 
 	shader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
 }
 
 double lastTime = glfwGetTime();
-int nbFrames = 0;
+double lastFrame = glfwGetTime();
+double currentFrame = glfwGetTime();
+double deltaTime = 0.0f;
+int frameCount = 0;
 
 void Application::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float currentFrame = glfwGetTime();
+		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		frameCount++;
+		if (currentFrame - lastTime >= 1.0) {
+			double fps = double(frameCount) / (currentFrame - lastTime);
+			std::cout << "FPS: " << fps << " | Delta Time: " << deltaTime << " seconds" << std::endl;
+
+			// Reset FPS counter
+			lastTime = currentFrame;
+			frameCount = 0;
+		}
 
 		processInput();
 		
@@ -70,7 +83,7 @@ void Application::mainLoop() {
 
 
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+		glfwPollEvents();		
 	}
 }
 

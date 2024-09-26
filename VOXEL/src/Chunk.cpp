@@ -4,7 +4,6 @@
 Chunk::Chunk() : VBO(0), VAO(0), EBO(0)
 {
 	xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-	std::cout << "Chunk created" << std::endl;
 	blocks = new Block * *[chunkSize];
 	for (int i = 0; i < chunkSize; i++)
 	{
