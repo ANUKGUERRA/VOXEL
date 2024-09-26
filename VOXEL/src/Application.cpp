@@ -72,7 +72,6 @@ void Application::mainLoop() {
 			double fps = double(frameCount) / (currentFrame - lastTime);
 			std::cout << "FPS: " << fps << " | Delta Time: " << deltaTime << " seconds" << std::endl;
 
-			// Reset FPS counter
 			lastTime = currentFrame;
 			frameCount = 0;
 		}
