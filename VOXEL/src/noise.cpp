@@ -1,37 +1,50 @@
 #include <iostream>
-#include "FastNoiseLite.h"  // Include FastNoiseLite header
+#include "noise.h"
+void generateNoise(int chunkX, int chunkZ, int chunkSize, Chunk &chunk)
+{
 
-// Configuration variables
-float noiseScale = 0.05f;  // Scale for the noise (frequency)
-int chunkSize = 16;        // Size of the chunk
+    FastNoiseLite fastNoise;
+    fastNoise.SetSeed(1);
+    fastNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    
 
-// Function to generate noise for a chunk
-void generateChunk(int chunkX, int chunkY, int chunkSize, int worldSeed) {
-    // Create a FastNoiseLite instance
-    FastNoiseLite noiseGenerator;
+    for (int x = 0; x < chunkSize; x++) {
+        for (int z = 0; z < chunkSize; z++) {
 
-    // Set the seed for deterministic noise generation
-    noiseGenerator.SetSeed(worldSeed);
 
-    // Set the noise type to Perlin (you can change to others like Simplex)
-    noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-
-    // Optional: You can configure other settings like frequency
-    noiseGenerator.SetFrequency(noiseScale);  // Controls the size of features
-
-    // Generate noise for the chunk
-    for (int y = 0; y < chunkSize; y++) {
-        for (int x = 0; x < chunkSize; x++) {
-            // Calculate global coordinates for noise
             float globalX = (chunkX * chunkSize) + x;
-            float globalY = (chunkY * chunkSize) + y;
+            float globalY = (chunkZ * chunkSize) + z;
 
-            // Get noise value at the global coordinates
-            float noiseValue = noiseGenerator.GetNoise(globalX, globalY);
+
+            float noiseValue = fastNoise.GetNoise(globalX, globalY);
 
             // Use or store the noise value (here we print it)
-            std::cout << noiseValue << " ";
+            std::cout << std::abs(std::floor(noiseValue * 100)) << " ";
         }
         std::cout << std::endl;
     }
 }
+
+//
+//// Configuration variables
+//float noiseScale = 0.05f;  // Scale for the noise (frequency)
+//int chunkSize = 16;        // Size of the chunk
+//
+//// Function to generate noise for a chunk
+//void generateChunk(int chunkX, int chunkY, int chunkSize, int worldSeed) {
+//    // Create a FastNoiseLite instance
+//    FastNoiseLite noiseGenerator;
+//
+//
+//    // Set the seed for deterministic noise generation
+//    noiseGenerator.SetSeed(worldSeed);
+//
+//    // Set the noise type to Perlin (you can change to others like Simplex)
+//    noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+//
+//    // Optional: You can configure other settings like frequency
+//    noiseGenerator.SetFrequency(noiseScale);  // Controls the size of features
+//
+//    // Generate noise for the chunk
+//    
+//}

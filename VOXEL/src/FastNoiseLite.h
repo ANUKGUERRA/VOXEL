@@ -65,6 +65,8 @@ public:
         NoiseType_Value
     };
 
+    NoiseType noisetype = NoiseType_OpenSimplex2;
+
     enum RotationType3D
     {
         RotationType3D_None,

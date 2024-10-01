@@ -1,11 +1,11 @@
-#ifndef CHUNK_H
-#define CHUNK_H
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include "../include/libs.h"
 #include "Block.h"
+#include "noise.h"
 #include <unordered_map>
 
 
@@ -16,7 +16,7 @@ public:
 	Chunk();
 	~Chunk();
 	void generateChunk();
-	void init();
+	void init(int chunkX, int chunkZ);
 	void draw();
 	void cleanup();
 	
@@ -51,4 +51,3 @@ private:
 	
 
 };
-#endif

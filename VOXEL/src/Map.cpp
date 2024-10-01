@@ -50,7 +50,7 @@ void Map::loadAreaChunks()
             {
                 Chunk* chunk = new Chunk();
                 chunks[key] = chunk;
-                chunks[key]->init();
+                chunks[key]->init(currentChunk.x, currentChunk.z);
             }
         }
     }

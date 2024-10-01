@@ -30,17 +30,7 @@ Chunk::~Chunk()
 
 void Chunk::generateChunk()
 {
-	for (int z = 0; z < chunkSize; z++) {
-
-		for (int y = 0; y < chunkSize; y++) {
-
-			for (int x = 0; x < chunkSize; x++) {
-				blocks[x][y][z].setActive(true);
-			}
-
-		}
-
-	}
+	
 
 
 
@@ -161,7 +151,9 @@ void Chunk::createCube(int i, int j, int k) {
 
 
 
-void Chunk::init() {
+void Chunk::init(int chunkX, int chunkZ) {
+	generateNoise(chunkX, chunkZ, chunkSize, *this);
+
 	generateChunk();
 	setupBuffers();
 }
