@@ -21,7 +21,7 @@ public:
 	void cleanup();
 	
 
-	static const int chunkSize = 8;
+	static const int chunkSize = 64;
 
 
 private:

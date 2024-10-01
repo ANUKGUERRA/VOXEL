@@ -1,6 +1,6 @@
 #include <iostream>
 #include "noise.h"
-void generateNoise(int chunkX, int chunkZ, int chunkSize, Chunk &chunk)
+void generateNoise(int chunkX, int chunkZ, int chunkSize, Block ***blocks)
 {
 
     FastNoiseLite fastNoise;
@@ -13,15 +13,17 @@ void generateNoise(int chunkX, int chunkZ, int chunkSize, Chunk &chunk)
 
 
             float globalX = (chunkX * chunkSize) + x;
-            float globalY = (chunkZ * chunkSize) + z;
+            float globalZ = (chunkZ * chunkSize) + z;
 
 
-            float noiseValue = fastNoise.GetNoise(globalX, globalY);
+            float noiseValue = fastNoise.GetNoise(globalX, globalZ);
 
             // Use or store the noise value (here we print it)
-            std::cout << std::abs(std::floor(noiseValue * 100)) << " ";
+            //std::cout << std::floor(((noiseValue + 1) / 2) * chunkSize) << " ";
+            
+            blocks[x][(int)std::floor(((noiseValue + 1) / 2) * chunkSize)][z].setActive(true);
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
 }
 

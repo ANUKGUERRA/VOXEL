@@ -152,7 +152,8 @@ void Chunk::createCube(int i, int j, int k) {
 
 
 void Chunk::init(int chunkX, int chunkZ) {
-	generateNoise(chunkX, chunkZ, chunkSize, *this);
+	//std::cout << "ChunkX: " << chunkX << " ChunkZ: " << chunkZ << std::endl;
+	generateNoise(chunkX, chunkZ, chunkSize, blocks);
 
 	generateChunk();
 	setupBuffers();
