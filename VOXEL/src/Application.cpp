@@ -2,6 +2,8 @@
 #include "../include/libs.h"
 #include "noise.h"
 
+
+
 Application::Application()
 	: window(nullptr),
 	camera(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f), deltaTime(0.0f), lastFrame(0.0f) {
@@ -24,7 +26,7 @@ void Application::initializeGLFW()
 }
 
 void Application::createWindow() {
-	window = glfwCreateWindow(1920 / 2, 1080 / 2, "Voxel", NULL, NULL);
+	window = glfwCreateWindow(widowWidth, windowHeight, "Voxel", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
@@ -39,15 +41,15 @@ void Application::setupOpenGL() {
 		throw std::runtime_error("Failed to initialize GLEW");
 	}
 
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
+
+	glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, widowWidth, windowHeight);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glfwSwapInterval(1);
 
 	shader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
@@ -61,6 +63,8 @@ int frameCount = 0;
 
 void Application::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
+		glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
+		glViewport(0, 0, widowWidth, windowHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		currentFrame = glfwGetTime();
@@ -111,16 +115,25 @@ void Application::render(glm::vec3 translate, Chunk* chunk)
 {
 	glUseProgram(shader.program);
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)1920 / (float)1080, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, translate);
+
 
 	shader.setMat4("projection", projection);
 	shader.setMat4("view", view);
 	shader.setMat4("model", model);
 
+	shader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
+	shader.setVec3("viewPos", camera.Position);
+	shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
+	shader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
+
 	chunk->draw();
+
+	glUseProgram(0);
 }
 
 void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) {

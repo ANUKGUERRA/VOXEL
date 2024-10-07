@@ -25,17 +25,16 @@ public:
 
 
 private:
-	struct VertexHasher {
-		std::size_t operator()(const glm::ivec3& v) const {
-			return std::hash<int>()(v.x) ^ std::hash<int>()(v.y) ^ std::hash<int>()(v.z);
-		}
-	};
 
 	GLuint VBO, VAO, EBO;
+
+	struct Vertex {
+		glm::ivec3 position;
+		glm::vec3 normal;
+	};
 	
-	std::vector<glm::ivec3> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<int> indices;
-	std::unordered_map<glm::ivec3, int, VertexHasher> vertexMap;
 	static int faceIndices[36];
 
 	bool xNeg, xPos, yNeg, yPos, zNeg, zPos;
@@ -46,7 +45,7 @@ private:
 	void setupBuffers();
 	void createCube(int i, int j, int k);
 
-	int getVertexIndex(const glm::ivec3& vertex);
+	void addVertex(const glm::ivec3& position, const glm::vec3& normal);
 
 	
 

@@ -14,6 +14,9 @@ private:
     float deltaTime;
     float lastFrame;
 
+    int widowWidth = 16;
+    int windowHeight = 9;
+
     void initializeGLFW();
     void createWindow();
     void setupOpenGL();

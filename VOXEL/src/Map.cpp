@@ -39,7 +39,6 @@ void Map::updateMap(float camX, float camZ, Application& app)
 
 void Map::loadAreaChunks()
 {
-
     for (int x = -nChunks; x <= nChunks; x++)
     {
         for (int z = -nChunks; z <= nChunks; z++)
