@@ -52,7 +52,7 @@ void Application::setupOpenGL() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glfwSwapInterval(1);
 
-	shader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+	mapShader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
 }
 
 double lastTime = glfwGetTime();
@@ -65,6 +65,8 @@ void Application::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
 		glViewport(0, 0, widowWidth, windowHeight);
+		//Sky color Cambiar per SkyBox
+		glClearColor(0.5f, 0.8f, 0.9f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		currentFrame = glfwGetTime();
@@ -113,7 +115,7 @@ void Application::processInput()
 
 void Application::render(glm::vec3 translate, Chunk* chunk)
 {
-	glUseProgram(shader.program);
+	glUseProgram(mapShader.program);
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
@@ -121,14 +123,13 @@ void Application::render(glm::vec3 translate, Chunk* chunk)
 	model = glm::translate(model, translate);
 
 
-	shader.setMat4("projection", projection);
-	shader.setMat4("view", view);
-	shader.setMat4("model", model);
-
-	shader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
-	shader.setVec3("viewPos", camera.Position);
-	shader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
-	shader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	mapShader.setMat4("projection", projection);
+	mapShader.setMat4("view", view);
+	mapShader.setMat4("model", model);
+	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
+	mapShader.setVec3("viewPos", camera.Position);
+	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
+	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
 
 
 	chunk->draw();

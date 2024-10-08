@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include "../include/libs.h"
-#include "Block.h"
+#include "Cube.h"
 #include "noise.h"
 #include <unordered_map>
 
@@ -29,7 +29,7 @@ private:
 	GLuint VBO, VAO, EBO;
 
 	struct Vertex {
-		glm::ivec3 position;
+		glm::vec3 position;
 		glm::vec3 normal;
 	};
 	
@@ -39,7 +39,7 @@ private:
 
 	bool xNeg, xPos, yNeg, yPos, zNeg, zPos;
 
-	Block*** blocks;
+	Cube*** blocks;
 
 	
 	void setupBuffers();

@@ -49,7 +49,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
     int success;
     char infoLog[512];
 
-    // Vertex Shader
+
+
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
@@ -59,7 +60,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    // Fragment Shader
+
+
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
@@ -69,7 +71,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    // Shader Program
+
+
     program = glCreateProgram();
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);

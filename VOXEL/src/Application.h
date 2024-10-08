@@ -9,17 +9,20 @@ class Application {
 private:
     GLFWwindow* window;
     Camera camera;
-    Shader shader;
+    
     Map map;
     float deltaTime;
     float lastFrame;
 
-    int widowWidth = 16;
-    int windowHeight = 9;
+    int widowWidth = 500;
+    int windowHeight = 500;
 
     void initializeGLFW();
     void createWindow();
     void setupOpenGL();
+
+    // Shaders:
+    Shader mapShader;
 
 
 public:

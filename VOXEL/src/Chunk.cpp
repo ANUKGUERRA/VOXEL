@@ -15,13 +15,13 @@ const glm::vec3 NORMALS[] = {
 Chunk::Chunk() : VBO(0), VAO(0), EBO(0)
 {
 	xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-	blocks = new Block * *[chunkSize];
+	blocks = new Cube * *[chunkSize];
 	for (int i = 0; i < chunkSize; i++)
 	{
-		blocks[i] = new Block * [chunkSize];
+		blocks[i] = new Cube * [chunkSize];
 		for (int j = 0; j < chunkSize; j++)
 		{
-			blocks[i][j] = new Block[chunkSize];
+			blocks[i][j] = new Cube[chunkSize];
 		}
 	}
 }
@@ -67,85 +67,34 @@ void Chunk::generateChunk()
 };
 
 
-void Chunk::addVertex(const glm::ivec3& position, const glm::vec3& normal) 
-{
-	indices.push_back(vertices.size());
-	vertices.push_back({ position, normal });
-}
-
 void Chunk::createCube(int x, int y, int z) {
-	glm::ivec3 v000(x, y, z);
-	glm::ivec3 v001(x, y, z + 1);
-	glm::ivec3 v010(x, y + 1, z);
-	glm::ivec3 v011(x, y + 1, z + 1);
-	glm::ivec3 v100(x + 1, y, z);
-	glm::ivec3 v101(x + 1, y, z + 1);
-	glm::ivec3 v110(x + 1, y + 1, z);
-	glm::ivec3 v111(x + 1, y + 1, z + 1);
+	const bool shouldRenderFace[6] = { !xPos, !xNeg, !yPos, !yNeg, !zPos, !zNeg };
 
-	// Create faces with unique vertices
-	if (!xPos) {
-		glm::vec3 normal = NORMALS[0];
-		addVertex(v100, normal);
-		addVertex(v101, normal);
-		addVertex(v111, normal);
-		addVertex(v100, normal);
-		addVertex(v111, normal);
-		addVertex(v110, normal);
+	uint32_t baseIndex = vertices.size();
+
+	for (int face = 0; face < 6; ++face) {
+		if (shouldRenderFace[face]) {
+
+			for (int i = 0; i < 4; ++i) {
+				glm::vec3 position(
+					x + Cube::faceVertices[face][i][0],
+					y + Cube::faceVertices[face][i][1],
+					z + Cube::faceVertices[face][i][2]
+				);
+				vertices.push_back({ position, NORMALS[face] });
+			}
+
+			indices.push_back(baseIndex);
+			indices.push_back(baseIndex + 1);
+			indices.push_back(baseIndex + 2);
+			indices.push_back(baseIndex);
+			indices.push_back(baseIndex + 2);
+			indices.push_back(baseIndex + 3);
+
+			baseIndex += 4;
+		}
 	}
-
-	if (!xNeg) {
-		glm::vec3 normal = NORMALS[1];
-		addVertex(v000, normal);
-		addVertex(v010, normal);
-		addVertex(v011, normal);
-		addVertex(v000, normal);
-		addVertex(v011, normal);
-		addVertex(v001, normal);
-	}
-
-	if (!yPos) {
-		glm::vec3 normal = NORMALS[2];
-		addVertex(v010, normal);
-		addVertex(v110, normal);
-		addVertex(v111, normal);
-		addVertex(v010, normal);
-		addVertex(v111, normal);
-		addVertex(v011, normal);
-	}
-
-	if (!yNeg) {
-		glm::vec3 normal = NORMALS[3];
-		addVertex(v000, normal);
-		addVertex(v001, normal);
-		addVertex(v101, normal);
-		addVertex(v000, normal);
-		addVertex(v101, normal);
-		addVertex(v100, normal);
-	}
-
-	if (!zPos) {
-		glm::vec3 normal = NORMALS[4];
-		addVertex(v001, normal);
-		addVertex(v011, normal);
-		addVertex(v111, normal);
-		addVertex(v001, normal);
-		addVertex(v111, normal);
-		addVertex(v101, normal);
-	}
-
-	if (!zNeg) {
-		glm::vec3 normal = NORMALS[5];
-		addVertex(v000, normal);
-		addVertex(v100, normal);
-		addVertex(v110, normal);
-		addVertex(v000, normal);
-		addVertex(v110, normal);
-		addVertex(v010, normal);
-	}
-
 }
-
 
 
 void Chunk::init(int chunkX, int chunkZ) {
@@ -166,19 +115,18 @@ void Chunk::setupBuffers() {
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
-	
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex,normal));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 	glEnableVertexAttribArray(1);
 
-
 	glBindVertexArray(0);
-
 }
+
+
 
 // Render the cube
 void Chunk::draw() {
