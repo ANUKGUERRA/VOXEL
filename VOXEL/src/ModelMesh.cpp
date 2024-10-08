@@ -1,4 +1,4 @@
-#include "ModelLoading.h"
+#include "ModelMesh.h"
 
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures) 
 {
@@ -36,5 +36,32 @@ void Mesh::generateMesh()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
+    glBindVertexArray(0);
+}
+
+
+void Mesh::draw(Shader& shader)
+{
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    for (unsigned int i = 0; i < textures.size(); i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+
+        string number;
+        string name = textures[i].type;
+        if (name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if (name == "texture_specular")
+            number = std::to_string(specularNr++);
+
+        shader.setInt(("material." + name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
+    glActiveTexture(GL_TEXTURE0);
+
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

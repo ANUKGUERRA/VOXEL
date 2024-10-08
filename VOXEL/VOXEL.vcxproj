@@ -16,7 +16,8 @@
     <None Include="res\shaders\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ModelLoading.cpp" />
+    <ClCompile Include="src\ModelLoader.cpp" />
+    <ClCompile Include="src\ModelMesh.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Cube.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libs.h" />
+    <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Cube.h" />
     <ClInclude Include="src\Camera.h" />
@@ -34,7 +36,7 @@
     <ClInclude Include="src\Chunk.h" />
     <ClInclude Include="src\FastNoiseLite.h" />
     <ClInclude Include="src\Map.h" />
-    <ClInclude Include="src\ModelLoading.h" />
+    <ClInclude Include="src\ModelMesh.h" />
     <ClInclude Include="src\noise.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
