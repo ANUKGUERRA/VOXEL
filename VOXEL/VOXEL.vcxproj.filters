@@ -18,6 +18,11 @@
     <None Include="res\shaders\fragment.glsl" />
     <None Include="res\shaders\vertex.glsl" />
     <None Include="assimp-vc143-mt.dll" />
+    <None Include="res\shaders\modelFragment.glsl" />
+    <None Include="res\shaders\modelVertex.glsl" />
+    <None Include="res\3DModels\untitled.fbx" />
+    <None Include="res\3DModels\11.fbx" />
+    <None Include="res\3DModels\Livinglegend.fbx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -41,7 +46,13 @@
     <ClCompile Include="src\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ModelLoading.cpp">
+    <ClCompile Include="src\ModelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Colider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,8 +87,17 @@
     <ClInclude Include="include\libs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ModelLoading.h">
+    <ClInclude Include="src\ModelLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ModelMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Colider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\3DModels\backpack.obj" />
   </ItemGroup>
 </Project>

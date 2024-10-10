@@ -15,7 +15,7 @@ class Chunk {
 public:
 	Chunk();
 	~Chunk();
-	void generateChunk();
+	void generateChunk(int chunkX, int chunkZ);
 	void init(int chunkX, int chunkZ);
 	void draw();
 	void cleanup();
@@ -39,14 +39,9 @@ private:
 
 	bool xNeg, xPos, yNeg, yPos, zNeg, zPos;
 
-	Cube*** blocks;
+	Cube **blocks;
 
 	
 	void setupBuffers();
 	void createCube(int i, int j, int k);
-
-	void addVertex(const glm::ivec3& position, const glm::vec3& normal);
-
-	
-
 };

@@ -21,8 +21,7 @@ void Mesh::generateMesh()
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-        &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),&indices[0], GL_STATIC_DRAW);
 
 
     glEnableVertexAttribArray(0);
@@ -38,7 +37,6 @@ void Mesh::generateMesh()
 
     glBindVertexArray(0);
 }
-
 
 void Mesh::draw(Shader& shader)
 {
@@ -64,4 +62,29 @@ void Mesh::draw(Shader& shader)
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+void Mesh::generateColider()
+{
+    glm::vec3 min;
+    glm::vec3 max;
+    
+    if (vertices.size() > 0) {
+        min = vertices[0].Position;
+        max = vertices[0].Position;
+
+        for (unsigned int i = 1; i < vertices.size(); i++) 
+        {
+            glm::vec3 pos = vertices[i].Position;
+
+            min.x = std::min(min.x, pos.x);
+            min.y = std::min(min.y, pos.y);
+            min.z = std::min(min.z, pos.z);
+
+            max.x = std::max(max.x, pos.x);
+            max.y = std::max(max.y, pos.y);
+            max.z = std::max(max.z, pos.z);
+        }
+    }
+    colider = Colider(min, max);
 }

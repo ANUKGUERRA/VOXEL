@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include <iostream>
 
 const glm::vec3 NORMALS[] = {
 	glm::vec3(1.0f, 0.0f, 0.0f),  // Pos X
@@ -15,14 +16,10 @@ const glm::vec3 NORMALS[] = {
 Chunk::Chunk() : VBO(0), VAO(0), EBO(0)
 {
 	xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-	blocks = new Cube * *[chunkSize];
+	blocks = new Cube *[chunkSize];
 	for (int i = 0; i < chunkSize; i++)
 	{
-		blocks[i] = new Cube * [chunkSize];
-		for (int j = 0; j < chunkSize; j++)
-		{
-			blocks[i][j] = new Cube[chunkSize];
-		}
+		blocks[i] = new Cube [chunkSize];
 	}
 }
 
@@ -30,41 +27,57 @@ Chunk::~Chunk()
 {
 	for (int i = 0; i < chunkSize; i++)
 	{
-		for (int j = 0; j < chunkSize; j++)
-		{
-			delete[] blocks[i][j];
-		}
 		delete[] blocks[i];
 	}
+	delete[] blocks;
 	cleanup();
 };
 
-void Chunk::generateChunk()
+void Chunk::generateChunk(int chunkX, int chunkZ)
 {
 	for (int x = 0; x < chunkSize; x++)
 	{
-		for (int y = 0; y < chunkSize; y++)
+		for (int z = 0; z < chunkSize; z++)
 		{
-			for (int z = 0; z < chunkSize; z++)
+			int height = blocks[x][z].height;
+
+			for (int y = 0; y <= height; y++)
 			{
-				if (!blocks[x][y][z].isActive()) {
-					continue;
-				}
 				xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-				if (x > 0) xNeg = blocks[x - 1][y][z].isActive();
-				if (x < chunkSize - 1) xPos = blocks[x + 1][y][z].isActive();
 
-				if (y > 0) yNeg = blocks[x][y - 1][z].isActive();
-				if (y < chunkSize - 1) yPos = blocks[x][y + 1][z].isActive();
+				// Check neighboring blocks
+				if (x > 0)
+					xNeg = (blocks[x - 1][z].height >= y);
+				if (x < chunkSize - 1)
+					xPos = (blocks[x + 1][z].height >= y);
 
-				if (z > 0) zNeg = blocks[x][y][z - 1].isActive();
-				if (z < chunkSize - 1) zPos = blocks[x][y][z + 1].isActive();
+				if (y > 0)
+					yNeg = true;
+				if (y < height)
+					yPos = true;
 
-				createCube(x, y, z);
+				if (z > 0)
+					zNeg = (blocks[x][z - 1].height >= y);
+				if (z < chunkSize - 1)
+					zPos = (blocks[x][z + 1].height >= y);
+
+				// Only create visible faces
+				if (!xNeg || !xPos || !yNeg || !yPos || !zNeg || !zPos)
+				{
+					createCube(x + chunkX, y, z + chunkZ);
+				}
+
+				// Set collider for the top block
+				if (y == height)
+				{
+					blocks[x][z].colider = Colider(glm::vec3(x + chunkX, y, z + chunkZ),
+						glm::vec3(x + chunkX + 1, y + 1, z + chunkZ + 1));
+				}
 			}
 		}
 	}
-};
+}
+
 
 
 void Chunk::createCube(int x, int y, int z) {
@@ -99,11 +112,11 @@ void Chunk::createCube(int x, int y, int z) {
 
 void Chunk::init(int chunkX, int chunkZ) {
 	generateNoise(chunkX, chunkZ, chunkSize, blocks);
-	generateChunk();
+	generateChunk(chunkX * chunkSize, chunkZ * chunkSize);
 	setupBuffers();
 }
 
-// Setup OpenGL buffers
+
 void Chunk::setupBuffers() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -127,14 +140,23 @@ void Chunk::setupBuffers() {
 }
 
 
+void Chunk::draw() 
+{
+    for (int x = 0; x < chunkSize; x++)
+    {
+		for (int z = 0; z < chunkSize; z++)
+		{
+			if (blocks[x][z].height == 0)
+				continue;
+            blocks[x][z].colider.coliderDraw();
+        }
+    }
 
-// Render the cube
-void Chunk::draw() {
-
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
+
 
 
 

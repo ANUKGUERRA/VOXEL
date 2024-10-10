@@ -11,7 +11,7 @@ using std::vector;
 class Model
 {
 public:
-    Model(char* path)
+    Model(const char* path)
     {
         loadModel(path);
     }
@@ -23,7 +23,6 @@ private:
     void loadModel(string path);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
-        string typeName);
+    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 };
 

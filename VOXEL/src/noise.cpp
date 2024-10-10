@@ -1,6 +1,6 @@
 #include <iostream>
 #include "noise.h"
-void generateNoise(int chunkX, int chunkZ, int chunkSize, Cube ***blocks)
+void generateNoise(int chunkX, int chunkZ, int chunkSize, Cube **blocks)
 {
 
 
@@ -19,7 +19,7 @@ void generateNoise(int chunkX, int chunkZ, int chunkSize, Cube ***blocks)
 
             float noiseValue = fastNoise.GetNoise(globalX, globalZ);
             
-            blocks[x][(int)std::floor(((noiseValue + 1) / 2) * chunkSize)][z].setActive(true);
+            blocks[x][z].height = (int)std::floor(((noiseValue + 1) / 2) * chunkSize);
         }
     }
 }

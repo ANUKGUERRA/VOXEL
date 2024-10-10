@@ -12,6 +12,11 @@ Application::Application()
 	setupOpenGL();
 	
 	map.loadMap();
+
+	importedModel = new Model("res/3DModels/Livinglegend.fbx");
+
+	mapShader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+	modelShader.load("res/shaders/modelVertex.glsl", "res/shaders/modelFragment.glsl");
 }
 
 Application::~Application() {
@@ -52,7 +57,7 @@ void Application::setupOpenGL() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glfwSwapInterval(1);
 
-	mapShader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+	
 }
 
 double lastTime = glfwGetTime();
@@ -66,7 +71,7 @@ void Application::mainLoop() {
 		glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
 		glViewport(0, 0, widowWidth, windowHeight);
 		//Sky color Cambiar per SkyBox
-		glClearColor(0.5f, 0.8f, 0.9f, 1.0f);
+		glClearColor(0.04f, 0.2f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		currentFrame = glfwGetTime();
@@ -85,6 +90,8 @@ void Application::mainLoop() {
 		processInput();
 		
 		map.updateMap(camera.Position.x, camera.Position.z, *this);
+
+		renderModel();
 
 
 		glfwSwapBuffers(window);
@@ -113,19 +120,19 @@ void Application::processInput()
 		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
-void Application::render(glm::vec3 translate, Chunk* chunk)
+void Application::renderMap(Chunk* chunk)
 {
 	glUseProgram(mapShader.program);
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, translate);
 
 
 	mapShader.setMat4("projection", projection);
 	mapShader.setMat4("view", view);
 	mapShader.setMat4("model", model);
+
 	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
 	mapShader.setVec3("viewPos", camera.Position);
 	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
@@ -133,6 +140,33 @@ void Application::render(glm::vec3 translate, Chunk* chunk)
 
 
 	chunk->draw();
+
+	glUseProgram(0);
+}
+
+void Application::renderModel() 
+{
+
+	glUseProgram(modelShader.program);
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 35.0f, 0.0f)); 
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.02f, 0.02f, 0.02f)); 
+
+	modelShader.setMat4("projection", projection);
+	modelShader.setMat4("view", view);
+	modelShader.setMat4("model", modelMatrix);
+	modelShader.setVec3("viewPos", camera.Position);
+
+
+	modelShader.setVec3("light.position", glm::vec3(0.7f, 0.2f, 2.0f));
+	modelShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+	modelShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	modelShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+	importedModel->draw(modelShader);
 
 	glUseProgram(0);
 }

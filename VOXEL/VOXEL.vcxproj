@@ -12,10 +12,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assimp-vc143-mt.dll" />
+    <None Include="res\3DModels\11.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="res\3DModels\Livinglegend.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="res\shaders\fragment.glsl" />
+    <None Include="res\shaders\modelFragment.glsl" />
+    <None Include="res\shaders\modelVertex.glsl" />
     <None Include="res\shaders\vertex.glsl" />
+    <None Include="res\3DModels\untitled.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Colider.cpp" />
     <ClCompile Include="src\ModelLoader.cpp" />
     <ClCompile Include="src\ModelMesh.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -28,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libs.h" />
+    <ClInclude Include="src\Colider.h" />
     <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Cube.h" />
@@ -39,6 +55,12 @@
     <ClInclude Include="src\ModelMesh.h" />
     <ClInclude Include="src\noise.h" />
     <ClInclude Include="src\Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\3DModels\backpack.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -56,13 +56,12 @@ void Map::loadAreaChunks()
 }
 void Map::drawAreaChunks(Application& app)
 {
-
     for (int x = -nChunks; x <= nChunks; x++)
     {
         for (int z = -nChunks; z <= nChunks; z++)
         {
             int key = cantorPair(currentChunk.x + x, currentChunk.z + z);
-            app.render(glm::vec3((currentChunk.x + x) * Chunk::chunkSize, 0.0f, (currentChunk.z + z) * Chunk::chunkSize), chunks[key]);
+            app.renderMap(chunks[key]);
         }
     }
 }
