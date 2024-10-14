@@ -3,20 +3,20 @@
 #include <vec3.hpp>
 #include "Shader.h"
 
-class Colider
+class Collider
 {
 public:
-	Colider(){}
-	Colider(glm::vec3 min, glm::vec3 max) : min(min), max(max)
+	Collider(){}
+	Collider(glm::vec3 min, glm::vec3 max) : min(min), max(max)
 	{
-		//coliderDrawSetUp();
+		//colliderDrawSetUp();
 	}
 
 	
-	void coliderDraw();
-	void setColiderPosition(glm::vec3 min, glm::vec3 max);
+	void colliderDraw();
+	void setColliderPosition(glm::vec3 min, glm::vec3 max);
 
-	bool intersects(const Colider& other)const;
+	bool intersects(const Collider& other)const;
 
 	std::string Tag;
 	glm::vec3 min;
@@ -25,6 +25,5 @@ public:
 
 private:
 	unsigned int VAO, VBO, EBO;
-	void coliderDrawSetUp();
-
+	void colliderDrawSetUp();
 };
