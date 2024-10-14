@@ -96,3 +96,45 @@ vec2 cantorUnpair(int pair) {
 
     return vec2(x, z);
 }
+
+std::vector<Colider*> Map::getPotentialCollisions(const Colider& playerColider) {
+
+    glm::vec3 minSearch = playerColider.min - glm::vec3(1, 1, 1);
+    glm::vec3 maxSearch = playerColider.max + glm::vec3(1, 1, 1);
+
+    int minChunkX = floor(minSearch.x / Chunk::chunkSize);
+    int maxChunkX = ceil(maxSearch.x / Chunk::chunkSize);
+    int minChunkZ = floor(minSearch.z / Chunk::chunkSize);
+    int maxChunkZ = ceil(maxSearch.z / Chunk::chunkSize);
+
+    for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
+        for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
+            int key = cantorPair(chunkX, chunkZ);
+            if (chunks.find(key) != chunks.end()) {
+                Chunk* chunk = chunks[key];
+
+
+                int startX = floor(minSearch.x) - chunkX * Chunk::chunkSize;
+                int endX = ceil(maxSearch.x) - chunkX * Chunk::chunkSize;
+                int startZ = floor(minSearch.z) - chunkZ * Chunk::chunkSize;
+                int endZ = ceil(maxSearch.z) - chunkZ * Chunk::chunkSize;
+
+
+                startX = std::max(0, std::min(startX, Chunk::chunkSize - 1));
+                endX = std::max(0, std::min(endX, Chunk::chunkSize - 1));
+                startZ = std::max(0, std::min(startZ, Chunk::chunkSize - 1));
+                endZ = std::max(0, std::min(endZ, Chunk::chunkSize - 1));
+
+                for (int x = startX; x <= endX; x++) {
+                    for (int z = startZ; z <= endZ; z++) {
+                        int worldY = chunk->blocks[x][z].height;
+                        if (worldY >= minSearch.y && worldY <= maxSearch.y) {
+                            potentialCollisions.push_back(&chunk->blocks[x][z].colider);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return potentialCollisions;
+}

@@ -57,3 +57,18 @@ void Colider::coliderDraw()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
+bool Colider::intersects(const Colider& other) const
+{
+    bool colliding = (min.x <= other.max.x && max.x >= other.min.x) &&
+        (min.y <= other.max.y && max.y >= other.min.y) &&
+        (min.z <= other.max.z && max.z >= other.min.z);
+    return colliding;
+}
+
+void Colider::setColiderPosition(glm::vec3 min, glm::vec3 max)
+{
+    this->min = min;
+    this->max = max;
+}
+
+

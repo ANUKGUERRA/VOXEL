@@ -6,7 +6,7 @@ void Model::draw(Shader &shader)
 {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i].draw(shader);
-		meshes[i].colider.coliderDraw();
+		//meshes[i].colider.coliderDraw();
 	}
 }
 void Model::loadModel(string path)

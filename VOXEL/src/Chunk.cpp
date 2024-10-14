@@ -61,13 +61,13 @@ void Chunk::generateChunk(int chunkX, int chunkZ)
 				if (z < chunkSize - 1)
 					zPos = (blocks[x][z + 1].height >= y);
 
-				// Only create visible faces
+				// Only create visible blocks
 				if (!xNeg || !xPos || !yNeg || !yPos || !zNeg || !zPos)
 				{
 					createCube(x + chunkX, y, z + chunkZ);
 				}
 
-				// Set collider for the top block
+				// Set collider
 				if (y == height)
 				{
 					blocks[x][z].colider = Colider(glm::vec3(x + chunkX, y, z + chunkZ),
@@ -142,7 +142,7 @@ void Chunk::setupBuffers() {
 
 void Chunk::draw() 
 {
-    for (int x = 0; x < chunkSize; x++)
+    /*for (int x = 0; x < chunkSize; x++)
     {
 		for (int z = 0; z < chunkSize; z++)
 		{
@@ -150,7 +150,7 @@ void Chunk::draw()
 				continue;
             blocks[x][z].colider.coliderDraw();
         }
-    }
+    }*/
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -10,13 +10,15 @@ class Application {
 private:
     GLFWwindow* window;
     Camera camera;
+    Colider playerCollider;
+    Colider playerGroundColider;
     
     Map map;
     float deltaTime;
     float lastFrame;
 
-    int widowWidth = 900;
-    int windowHeight = 800;
+    static int widowWidth;
+    static int windowHeight;
 
     void initializeGLFW();
     void createWindow();
@@ -34,8 +36,10 @@ public:
     void mainLoop();
     void processInput();
     static void mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn);
+    glm::vec3 ApplyGravity(glm::vec3 position, glm::vec3 &velocity, float deltaTime, float gravityStrength);
     void renderMap(Chunk* chunk);
     void renderModel();
+    void processCollisions();
 
 
 };

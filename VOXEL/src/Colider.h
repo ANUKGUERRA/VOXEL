@@ -9,11 +9,14 @@ public:
 	Colider(){}
 	Colider(glm::vec3 min, glm::vec3 max) : min(min), max(max)
 	{
-		coliderDrawSetUp();
+		//coliderDrawSetUp();
 	}
 
 	
 	void coliderDraw();
+	void setColiderPosition(glm::vec3 min, glm::vec3 max);
+
+	bool intersects(const Colider& other)const;
 
 	std::string Tag;
 	glm::vec3 min;

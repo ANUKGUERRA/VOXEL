@@ -2,11 +2,12 @@
 #include "../include/libs.h"
 #include "noise.h"
 
-
+int Application::widowWidth = 900;
+int Application::windowHeight = 800;
 
 Application::Application()
 	: window(nullptr),
-	camera(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f), deltaTime(0.0f), lastFrame(0.0f) {
+	camera(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f), deltaTime(0.0f), lastFrame(0.0f) {
 	initializeGLFW();
 	createWindow();
 	setupOpenGL();
@@ -93,6 +94,8 @@ void Application::mainLoop() {
 
 		renderModel();
 
+		processCollisions();
+		
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();		
@@ -112,8 +115,6 @@ void Application::processInput()
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
@@ -146,7 +147,7 @@ void Application::renderMap(Chunk* chunk)
 
 void Application::renderModel() 
 {
-
+	(float)widowWidth;
 	glUseProgram(modelShader.program);
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
@@ -171,10 +172,12 @@ void Application::renderModel()
 	glUseProgram(0);
 }
 
-void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) {
+void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) 
+{
+	(float)widowWidth;
 	static bool firstMouse = true;
-	static float lastX = 1920.0f / 2.0;
-	static float lastY = 1080.0 / 2.0;
+	static float lastX = (float)widowWidth / 2.0;
+	static float lastY = (float)windowHeight / 2.0;
 
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
@@ -194,3 +197,63 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 	Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 	app->camera.ProcessMouseMovement(xoffset, yoffset);
 }
+
+
+
+void Application::processCollisions()
+{
+	playerCollider.setColiderPosition(camera.Position + glm::vec3(-0.5f, -2, -0.5f), camera.Position + glm::vec3(0.5f, 0, 0.5f));
+	playerGroundColider.setColiderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
+
+	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
+
+	bool isGrounded = false;
+	for (int i = 0; i < map.potentialCollisions.size(); i++)
+	{
+		bool collidingWithGround = playerGroundColider.intersects(*map.potentialCollisions[i]);
+		if (playerCollider.intersects(*map.potentialCollisions[i]) || collidingWithGround)
+		{
+			glm::vec3 penetration = glm::min(playerCollider.max, map.potentialCollisions[i]->max) - glm::max(playerCollider.min, map.potentialCollisions[i]->min);
+
+			glm::vec3 resolution(0.0f);
+			if (penetration.x < penetration.y && penetration.x < penetration.z)
+			{
+				resolution.x = (playerCollider.min.x < map.potentialCollisions[i]->min.x) ? -penetration.x : penetration.x;
+			}
+			else if (penetration.y < penetration.z)
+			{
+				resolution.y = (playerCollider.min.y < map.potentialCollisions[i]->min.y) ? -penetration.y : penetration.y;
+				if (collidingWithGround && resolution.y > 0)
+				{
+					isGrounded = true;
+					camera.velocity.y = 0;
+				}
+			}
+			else
+			{
+				resolution.z = (playerCollider.min.z < map.potentialCollisions[i]->min.z) ? -penetration.z : penetration.z;
+			}
+
+			camera.Position += resolution;
+			playerCollider.min += resolution;
+			playerCollider.max += resolution;
+			playerGroundColider.min += resolution;
+			playerGroundColider.max += resolution;
+		}
+	}
+
+	if (!isGrounded)
+	{
+		camera.Position = ApplyGravity(camera.Position, camera.velocity, deltaTime, 9.81f);
+	}
+} 
+
+
+glm::vec3 Application::ApplyGravity(glm::vec3 position, glm::vec3 &velocity, float deltaTime, float gravityStrength) {
+	velocity.y -= gravityStrength * deltaTime;
+
+	position += velocity * deltaTime;
+
+	return position;
+}
+

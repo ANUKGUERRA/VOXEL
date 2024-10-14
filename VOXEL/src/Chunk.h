@@ -20,7 +20,7 @@ public:
 	void draw();
 	void cleanup();
 	
-
+	Cube** blocks;
 	static const int chunkSize = 64;
 
 
@@ -39,7 +39,7 @@ private:
 
 	bool xNeg, xPos, yNeg, yPos, zNeg, zPos;
 
-	Cube **blocks;
+	
 
 	
 	void setupBuffers();
