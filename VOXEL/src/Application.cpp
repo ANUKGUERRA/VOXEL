@@ -2,16 +2,23 @@
 #include "../include/libs.h"
 #include "noise.h"
 
+int Application::widowWidth = 900;
+int Application::windowHeight = 800;
+
 Application::Application()
 	: window(nullptr),
-	camera(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f), deltaTime(0.0f), lastFrame(0.0f) {
+	camera(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f), deltaTime(0.0f), lastFrame(0.0f) {
 	initializeGLFW();
 	createWindow();
 	setupOpenGL();
 	
 	map.loadMap();
-}
 
+	importedModel = new Model("res/3DModels/Livinglegend.fbx");
+
+	mapShader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+	modelShader.load("res/shaders/modelVertex.glsl", "res/shaders/modelFragment.glsl");
+}
 
 Application::~Application() {
 	glfwTerminate();
@@ -25,7 +32,7 @@ void Application::initializeGLFW()
 }
 
 void Application::createWindow() {
-	window = glfwCreateWindow(1920 / 2, 1080 / 2, "Voxel", NULL, NULL);
+	window = glfwCreateWindow(widowWidth, windowHeight, "Voxel", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
@@ -40,37 +47,58 @@ void Application::setupOpenGL() {
 		throw std::runtime_error("Failed to initialize GLEW");
 	}
 
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
+
+	glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, widowWidth, windowHeight);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glfwSwapInterval(1);
 
-	shader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+	
 }
 
 double lastTime = glfwGetTime();
-int nbFrames = 0;
+double lastFrame = glfwGetTime();
+double currentFrame = glfwGetTime();
+double deltaTime = 0.0f;
+int frameCount = 0;
 
 void Application::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
+		glfwGetFramebufferSize(window, &widowWidth, &windowHeight);
+		glViewport(0, 0, widowWidth, windowHeight);
+		//Sky color Cambiar per SkyBox
+		glClearColor(0.04f, 0.2f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float currentFrame = glfwGetTime();
+		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		frameCount++;
+		if (currentFrame - lastTime >= 1.0) {
+			double fps = double(frameCount) / (currentFrame - lastTime);
+			std::cout << "FPS: " << fps << " | Delta Time: " << deltaTime << " seconds" << std::endl;
+
+			lastTime = currentFrame;
+			frameCount = 0;
+		}
 
 		processInput();
 		
 		map.updateMap(camera.Position.x, camera.Position.z, *this);
 
+		renderModel();
+
+		processCollisions();
+		
 
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+		glfwPollEvents();		
 	}
 }
 
@@ -89,32 +117,67 @@ void Application::processInput()
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		camera.ProcessKeyboard(UP, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
-void Application::render(glm::vec3 translate, Chunk* chunk)
+void Application::renderMap(Chunk* chunk)
 {
-	glUseProgram(shader.program);
+	glUseProgram(mapShader.program);
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)1920 / (float)1080, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, translate);
 
-	shader.setMat4("projection", projection);
-	shader.setMat4("view", view);
-	shader.setMat4("model", model);
+
+	mapShader.setMat4("projection", projection);
+	mapShader.setMat4("view", view);
+	mapShader.setMat4("model", model);
+
+	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
+	mapShader.setVec3("viewPos", camera.Position);
+	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
+	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
 
 	chunk->draw();
+
+	glUseProgram(0);
 }
 
-void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) {
+void Application::renderModel() 
+{
+	(float)widowWidth;
+	glUseProgram(modelShader.program);
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 35.0f, 0.0f)); 
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.02f, 0.02f, 0.02f)); 
+
+	modelShader.setMat4("projection", projection);
+	modelShader.setMat4("view", view);
+	modelShader.setMat4("model", modelMatrix);
+	modelShader.setVec3("viewPos", camera.Position);
+
+
+	modelShader.setVec3("light.position", glm::vec3(0.7f, 0.2f, 2.0f));
+	modelShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+	modelShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	modelShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+	importedModel->draw(modelShader);
+
+	glUseProgram(0);
+}
+
+void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) 
+{
+	(float)widowWidth;
 	static bool firstMouse = true;
-	static float lastX = 1920.0f / 2.0;
-	static float lastY = 1080.0 / 2.0;
+	static float lastX = (float)widowWidth / 2.0;
+	static float lastY = (float)windowHeight / 2.0;
 
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
@@ -134,3 +197,63 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 	Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 	app->camera.ProcessMouseMovement(xoffset, yoffset);
 }
+
+
+
+void Application::processCollisions()
+{
+	playerCollider.setColiderPosition(camera.Position + glm::vec3(-0.5f, -2, -0.5f), camera.Position + glm::vec3(0.5f, 0, 0.5f));
+	playerGroundColider.setColiderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
+
+	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
+
+	bool isGrounded = false;
+	for (int i = 0; i < map.potentialCollisions.size(); i++)
+	{
+		bool collidingWithGround = playerGroundColider.intersects(*map.potentialCollisions[i]);
+		if (playerCollider.intersects(*map.potentialCollisions[i]) || collidingWithGround)
+		{
+			glm::vec3 penetration = glm::min(playerCollider.max, map.potentialCollisions[i]->max) - glm::max(playerCollider.min, map.potentialCollisions[i]->min);
+
+			glm::vec3 resolution(0.0f);
+			if (penetration.x < penetration.y && penetration.x < penetration.z)
+			{
+				resolution.x = (playerCollider.min.x < map.potentialCollisions[i]->min.x) ? -penetration.x : penetration.x;
+			}
+			else if (penetration.y < penetration.z)
+			{
+				resolution.y = (playerCollider.min.y < map.potentialCollisions[i]->min.y) ? -penetration.y : penetration.y;
+				if (collidingWithGround && resolution.y > 0)
+				{
+					isGrounded = true;
+					camera.velocity.y = 0;
+				}
+			}
+			else
+			{
+				resolution.z = (playerCollider.min.z < map.potentialCollisions[i]->min.z) ? -penetration.z : penetration.z;
+			}
+
+			camera.Position += resolution;
+			playerCollider.min += resolution;
+			playerCollider.max += resolution;
+			playerGroundColider.min += resolution;
+			playerGroundColider.max += resolution;
+		}
+	}
+
+	if (!isGrounded)
+	{
+		camera.Position = ApplyGravity(camera.Position, camera.velocity, deltaTime, 9.81f);
+	}
+} 
+
+
+glm::vec3 Application::ApplyGravity(glm::vec3 position, glm::vec3 &velocity, float deltaTime, float gravityStrength) {
+	velocity.y -= gravityStrength * deltaTime;
+
+	position += velocity * deltaTime;
+
+	return position;
+}
+

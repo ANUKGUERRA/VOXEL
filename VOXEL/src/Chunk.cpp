@@ -1,18 +1,25 @@
 #include "Chunk.h"
+#include <iostream>
+
+const glm::vec3 NORMALS[] = {
+	glm::vec3(1.0f, 0.0f, 0.0f),  // Pos X
+	glm::vec3(-1.0f, 0.0f, 0.0f), // Neg X
+
+	glm::vec3(0.0f, 1.0f, 0.0f),  // Pos Y
+	glm::vec3(0.0f, -1.0f, 0.0f), // Neg Y
+
+	glm::vec3(0.0f, 0.0f, 1.0f),  // Pos Z
+	glm::vec3(0.0f, 0.0f, -1.0f)  // Neg Z
+};
 
 
 Chunk::Chunk() : VBO(0), VAO(0), EBO(0)
 {
 	xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-	std::cout << "Chunk created" << std::endl;
-	blocks = new Block * *[chunkSize];
+	blocks = new Cube *[chunkSize];
 	for (int i = 0; i < chunkSize; i++)
 	{
-		blocks[i] = new Block * [chunkSize];
-		for (int j = 0; j < chunkSize; j++)
-		{
-			blocks[i][j] = new Block[chunkSize];
-		}
+		blocks[i] = new Cube [chunkSize];
 	}
 }
 
@@ -20,154 +27,96 @@ Chunk::~Chunk()
 {
 	for (int i = 0; i < chunkSize; i++)
 	{
-		for (int j = 0; j < chunkSize; j++)
-		{
-			delete[] blocks[i][j];
-		}
 		delete[] blocks[i];
 	}
+	delete[] blocks;
 	cleanup();
 };
 
-void Chunk::generateChunk()
+void Chunk::generateChunk(int chunkX, int chunkZ)
 {
-	for (int z = 0; z < chunkSize; z++) {
-
-		for (int y = 0; y < chunkSize; y++) {
-
-			for (int x = 0; x < chunkSize; x++) {
-				blocks[x][y][z].setActive(true);
-			}
-
-		}
-
-	}
-
-
-
 	for (int x = 0; x < chunkSize; x++)
 	{
-		for (int y = 0; y < chunkSize; y++)
+		for (int z = 0; z < chunkSize; z++)
 		{
-			for (int z = 0; z < chunkSize; z++)
+			int height = blocks[x][z].height;
+
+			for (int y = 0; y <= height; y++)
 			{
-				if (!blocks[x][y][z].isActive()) {
-					continue;
-				}
 				xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
-				if (x > 0) xNeg = blocks[x - 1][y][z].isActive();
-				if (x < chunkSize - 1) xPos = blocks[x + 1][y][z].isActive();
 
-				if (y > 0) yNeg = blocks[x][y - 1][z].isActive();
-				if (y < chunkSize - 1) yPos = blocks[x][y + 1][z].isActive();
+				// Check neighboring blocks
+				if (x > 0)
+					xNeg = (blocks[x - 1][z].height >= y);
+				if (x < chunkSize - 1)
+					xPos = (blocks[x + 1][z].height >= y);
 
-				if (z > 0) zNeg = blocks[x][y][z - 1].isActive();
-				if (z < chunkSize - 1) zPos = blocks[x][y][z + 1].isActive();
+				if (y > 0)
+					yNeg = true;
+				if (y < height)
+					yPos = true;
 
-				createCube(x, y, z);
+				if (z > 0)
+					zNeg = (blocks[x][z - 1].height >= y);
+				if (z < chunkSize - 1)
+					zPos = (blocks[x][z + 1].height >= y);
+
+				// Only create visible blocks
+				if (!xNeg || !xPos || !yNeg || !yPos || !zNeg || !zPos)
+				{
+					createCube(x + chunkX, y, z + chunkZ);
+				}
+
+				// Set collider
+				if (y == height)
+				{
+					blocks[x][z].colider = Colider(glm::vec3(x + chunkX, y, z + chunkZ),
+						glm::vec3(x + chunkX + 1, y + 1, z + chunkZ + 1));
+				}
 			}
 		}
 	}
-};
-
-struct VertexHasher {
-	std::size_t operator()(const glm::ivec3& v) const {
-		return std::hash<int>()(v.x) ^ std::hash<int>()(v.y) ^ std::hash<int>()(v.z);
-	}
-};
-
-
-int Chunk::getVertexIndex(const glm::ivec3& vertex) {
-	// Check if the vertex already exists
-	auto it = vertexMap.find(vertex);
-	if (it != vertexMap.end()) {
-		return it->second;
-	}
-	else {
-		// Add new vertex and return its index
-		int newIndex = vertices.size();
-		vertices.push_back(vertex);
-		vertexMap[vertex] = newIndex;
-		return newIndex;
-	}
-}
-
-void Chunk::createCube(int i, int j, int k) {
-	// Define vertices relative to the cube position
-	glm::ivec3 v000(i, j, k);
-	glm::ivec3 v001(i, j, k + 1);
-	glm::ivec3 v010(i, j + 1, k);
-	glm::ivec3 v011(i, j + 1, k + 1);
-	glm::ivec3 v100(i + 1, j, k);
-	glm::ivec3 v101(i + 1, j, k + 1);
-	glm::ivec3 v110(i + 1, j + 1, k);
-	glm::ivec3 v111(i + 1, j + 1, k + 1);
-
-	// Create faces with unique vertices
-	if (!xPos) {
-		indices.push_back(getVertexIndex(v100));
-		indices.push_back(getVertexIndex(v101));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v100));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v110));
-	}
-
-	if (!xNeg) {
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v010));
-		indices.push_back(getVertexIndex(v011));
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v011));
-		indices.push_back(getVertexIndex(v001));
-	}
-
-	if (!yPos) {
-		indices.push_back(getVertexIndex(v010));
-		indices.push_back(getVertexIndex(v110));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v010));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v011));
-	}
-
-	if (!yNeg) {
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v001));
-		indices.push_back(getVertexIndex(v101));
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v101));
-		indices.push_back(getVertexIndex(v100));
-	}
-
-	if (!zPos) {
-		indices.push_back(getVertexIndex(v001));
-		indices.push_back(getVertexIndex(v011));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v001));
-		indices.push_back(getVertexIndex(v111));
-		indices.push_back(getVertexIndex(v101));
-	}
-
-	if (!zNeg) {
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v100));
-		indices.push_back(getVertexIndex(v110));
-		indices.push_back(getVertexIndex(v000));
-		indices.push_back(getVertexIndex(v110));
-		indices.push_back(getVertexIndex(v010));
-	}
-
 }
 
 
 
-void Chunk::init() {
-	generateChunk();
+void Chunk::createCube(int x, int y, int z) {
+	const bool shouldRenderFace[6] = { !xPos, !xNeg, !yPos, !yNeg, !zPos, !zNeg };
+
+	uint32_t baseIndex = vertices.size();
+
+	for (int face = 0; face < 6; ++face) {
+		if (shouldRenderFace[face]) {
+
+			for (int i = 0; i < 4; ++i) {
+				glm::vec3 position(
+					x + Cube::faceVertices[face][i][0],
+					y + Cube::faceVertices[face][i][1],
+					z + Cube::faceVertices[face][i][2]
+				);
+				vertices.push_back({ position, NORMALS[face] });
+			}
+
+			indices.push_back(baseIndex);
+			indices.push_back(baseIndex + 1);
+			indices.push_back(baseIndex + 2);
+			indices.push_back(baseIndex);
+			indices.push_back(baseIndex + 2);
+			indices.push_back(baseIndex + 3);
+
+			baseIndex += 4;
+		}
+	}
+}
+
+
+void Chunk::init(int chunkX, int chunkZ) {
+	generateNoise(chunkX, chunkZ, chunkSize, blocks);
+	generateChunk(chunkX * chunkSize, chunkZ * chunkSize);
 	setupBuffers();
 }
 
-// Setup OpenGL buffers
+
 void Chunk::setupBuffers() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -176,31 +125,42 @@ void Chunk::setupBuffers() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::ivec3), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
-	
-	//Position
-	glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 3 * sizeof(GLint), (GLvoid*)0);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+	glEnableVertexAttribArray(1);
 
-	glBindVertexArray(0);
-
-}
-
-// Render the cube
-void Chunk::draw() {
-
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
 
+void Chunk::draw() 
+{
+    /*for (int x = 0; x < chunkSize; x++)
+    {
+		for (int z = 0; z < chunkSize; z++)
+		{
+			if (blocks[x][z].height == 0)
+				continue;
+            blocks[x][z].colider.coliderDraw();
+        }
+    }*/
 
-// Cleanup resources
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+
+
+
+// Cleanup Buffers
 void Chunk::cleanup() {
 	if (EBO) glDeleteBuffers(1, &EBO);
 	if (VBO) glDeleteBuffers(1, &VBO);

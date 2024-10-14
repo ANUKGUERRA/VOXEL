@@ -8,7 +8,7 @@
 Shader::Shader() : program(0) {}
 
 Shader::~Shader() {
-    //glDeleteProgram(program);
+    glDeleteProgram(program);
 }
 
 void Shader::load(const std::string& vertexPath, const std::string& fragmentPath) {
@@ -18,9 +18,19 @@ void Shader::load(const std::string& vertexPath, const std::string& fragmentPath
 }
 
 
-void Shader::setMat4(const std::string& name, const glm::mat4& mat) {
+void Shader::setInt(const std::string& name, const int value) {
     GLint location = glGetUniformLocation(program, name.c_str());
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+    glUniform1i(location, value);
+}
+
+void Shader::setMat4(const std::string& name, const glm::mat4& value) {
+    GLint location = glGetUniformLocation(program, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::setVec3(const std::string& name, const glm::vec3& value) {
+    GLint location = glGetUniformLocation(program, name.c_str());
+    glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
 std::string Shader::readFile(const std::string& path) {
@@ -44,7 +54,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
     int success;
     char infoLog[512];
 
-    // Vertex Shader
+
+
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
@@ -54,7 +65,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    // Fragment Shader
+
+
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
@@ -64,7 +76,8 @@ void Shader::compile(const std::string& vertexCode, const std::string& fragmentC
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    // Shader Program
+
+
     program = glCreateProgram();
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);

@@ -19,13 +19,15 @@ public:
 
 	void updateMap(float camX, float camZ, Application& app);
 	void loadMap();
-
+	std::vector<Colider*> getPotentialCollisions(const Colider& playerColider);
+	std::vector<Colider*> potentialCollisions;
 
 private:
 	void loadAreaChunks();
 	void drawAreaChunks(Application& app);
-	int nChunks = 3;
+	int nChunks = 10;
 	vec2 currentChunk = { 0.f,0.f };
+	
 	std::unordered_map<int, Chunk*> chunks;
 
 };
