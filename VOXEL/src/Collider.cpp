@@ -1,7 +1,7 @@
-#include "Colider.h"
+#include "Collider.h"
 
 
-void Colider::coliderDrawSetUp() 
+void Collider::colliderDrawSetUp() 
 {
     glm::vec3 vertices_AABB[8] = {
         // Bottom face
@@ -46,7 +46,7 @@ void Colider::coliderDrawSetUp()
     glBindVertexArray(0);
 }
 
-void Colider::coliderDraw()
+void Collider::colliderDraw()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -57,7 +57,7 @@ void Colider::coliderDraw()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-bool Colider::intersects(const Colider& other) const
+bool Collider::intersects(const Collider& other) const
 {
     bool colliding = (min.x <= other.max.x && max.x >= other.min.x) &&
         (min.y <= other.max.y && max.y >= other.min.y) &&
@@ -65,7 +65,7 @@ bool Colider::intersects(const Colider& other) const
     return colliding;
 }
 
-void Colider::setColiderPosition(glm::vec3 min, glm::vec3 max)
+void Collider::setColliderPosition(glm::vec3 min, glm::vec3 max)
 {
     this->min = min;
     this->max = max;

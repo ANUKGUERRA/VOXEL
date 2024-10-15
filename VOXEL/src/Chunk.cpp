@@ -41,39 +41,20 @@ void Chunk::generateChunk(int chunkX, int chunkZ)
 		{
 			int height = blocks[x][z].height;
 
-			for (int y = 0; y <= height; y++)
-			{
-				xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
+			xNeg = false, xPos = false, yNeg = false, yPos = false, zNeg = false, zPos = false;
 
-				// Check neighboring blocks
-				if (x > 0)
-					xNeg = (blocks[x - 1][z].height >= y);
-				if (x < chunkSize - 1)
-					xPos = (blocks[x + 1][z].height >= y);
+			if (x > 0)
+				xNeg = (height == blocks[x - 1][z].height);
+			if (x < chunkSize - 1)
+				xPos = (height == blocks[x + 1][z].height);
 
-				if (y > 0)
-					yNeg = true;
-				if (y < height)
-					yPos = true;
+			if (z > 0)
+				zNeg = (height == blocks[x][z - 1].height);
+			if (z < chunkSize - 1)
+				zPos = (height == blocks[x][z + 1].height);
 
-				if (z > 0)
-					zNeg = (blocks[x][z - 1].height >= y);
-				if (z < chunkSize - 1)
-					zPos = (blocks[x][z + 1].height >= y);
-
-				// Only create visible blocks
-				if (!xNeg || !xPos || !yNeg || !yPos || !zNeg || !zPos)
-				{
-					createCube(x + chunkX, y, z + chunkZ);
-				}
-
-				// Set collider
-				if (y == height)
-				{
-					blocks[x][z].colider = Colider(glm::vec3(x + chunkX, y, z + chunkZ),
-						glm::vec3(x + chunkX + 1, y + 1, z + chunkZ + 1));
-				}
-			}
+			createCube(x + chunkX, height, z + chunkZ);
+			blocks[x][z].collider = Collider(glm::vec3(x + chunkX, height, z + chunkZ),glm::vec3(x + chunkX + 1, height + 1, z + chunkZ + 1));
 		}
 	}
 }
@@ -81,7 +62,7 @@ void Chunk::generateChunk(int chunkX, int chunkZ)
 
 
 void Chunk::createCube(int x, int y, int z) {
-	const bool shouldRenderFace[6] = { !xPos, !xNeg, !yPos, !yNeg, !zPos, !zNeg };
+	const bool shouldRenderFace[6] = { !xPos, !xNeg, !yPos, yNeg, !zPos, !zNeg };
 
 	uint32_t baseIndex = vertices.size();
 
@@ -148,7 +129,7 @@ void Chunk::draw()
 		{
 			if (blocks[x][z].height == 0)
 				continue;
-            blocks[x][z].colider.coliderDraw();
+            blocks[x][z].collider.colliderDraw();
         }
     }*/
 

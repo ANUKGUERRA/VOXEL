@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include <string>
 #include <vec3.hpp>
 #include "Shader.h"
@@ -6,13 +7,13 @@
 class Collider
 {
 public:
-	Collider(){}
+	Collider() {}
 	Collider(glm::vec3 min, glm::vec3 max) : min(min), max(max)
 	{
 		//colliderDrawSetUp();
 	}
 
-	
+
 	void colliderDraw();
 	void setColliderPosition(glm::vec3 min, glm::vec3 max);
 

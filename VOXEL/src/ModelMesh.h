@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "Shader.h"
-#include "Colider.h"
+#include "Collider.h"
 
 using std::string;
 using std::vector;
@@ -30,8 +30,8 @@ public:
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 
 	void draw(Shader &shader);
-	Colider colider;
-	void generateColider();
+	Collider collider;
+	void generateCollider();
 private:
     unsigned int VAO, VBO, EBO;
 	void generateMesh();

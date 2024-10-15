@@ -19,8 +19,8 @@ public:
 
 	void updateMap(float camX, float camZ, Application& app);
 	void loadMap();
-	std::vector<Colider*> getPotentialCollisions(const Colider& playerColider);
-	std::vector<Colider*> potentialCollisions;
+	std::vector<Collider*> getPotentialCollisions(const Collider& playerCollider);
+	std::vector<Collider*> potentialCollisions;
 
 private:
 	void loadAreaChunks();

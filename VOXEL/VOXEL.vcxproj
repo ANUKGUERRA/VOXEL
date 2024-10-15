@@ -30,7 +30,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Colider.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\ModelLoader.cpp" />
     <ClCompile Include="src\ModelMesh.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libs.h" />
-    <ClInclude Include="src\Colider.h" />
+    <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Cube.h" />

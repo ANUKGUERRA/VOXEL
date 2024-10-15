@@ -52,7 +52,7 @@
     <ClCompile Include="src\ModelMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Colider.cpp">
+    <ClCompile Include="src\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,7 +93,7 @@
     <ClInclude Include="src\ModelMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Colider.h">
+    <ClInclude Include="src\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

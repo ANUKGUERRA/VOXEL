@@ -10,8 +10,8 @@ class Application {
 private:
     GLFWwindow* window;
     Camera camera;
-    Colider playerCollider;
-    Colider playerGroundColider;
+    Collider playerCollider;
+    Collider playerGroundCollider;
     
     Map map;
     float deltaTime;

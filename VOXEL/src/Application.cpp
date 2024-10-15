@@ -202,15 +202,15 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 
 void Application::processCollisions()
 {
-	playerCollider.setColiderPosition(camera.Position + glm::vec3(-0.5f, -2, -0.5f), camera.Position + glm::vec3(0.5f, 0, 0.5f));
-	playerGroundColider.setColiderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
+	playerCollider.setColliderPosition(camera.Position + glm::vec3(-0.5f, -2, -0.5f), camera.Position + glm::vec3(0.5f, 0, 0.5f));
+	playerGroundCollider.setColliderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
 
 	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
 
 	bool isGrounded = false;
 	for (int i = 0; i < map.potentialCollisions.size(); i++)
 	{
-		bool collidingWithGround = playerGroundColider.intersects(*map.potentialCollisions[i]);
+		bool collidingWithGround = playerGroundCollider.intersects(*map.potentialCollisions[i]);
 		if (playerCollider.intersects(*map.potentialCollisions[i]) || collidingWithGround)
 		{
 			glm::vec3 penetration = glm::min(playerCollider.max, map.potentialCollisions[i]->max) - glm::max(playerCollider.min, map.potentialCollisions[i]->min);
@@ -237,8 +237,8 @@ void Application::processCollisions()
 			camera.Position += resolution;
 			playerCollider.min += resolution;
 			playerCollider.max += resolution;
-			playerGroundColider.min += resolution;
-			playerGroundColider.max += resolution;
+			playerGroundCollider.min += resolution;
+			playerGroundCollider.max += resolution;
 		}
 	}
 

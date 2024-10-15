@@ -1,5 +1,5 @@
 #pragma once
-#include "Colider.h"
+#include "Collider.h"
 class Cube {
 public:
     Cube();
@@ -8,7 +8,7 @@ public:
     void setActive(bool active);
     static const int faceVertices[6][4][3];
     static const int cubeIndices[6][6];
-    Colider colider;
+    Collider collider;
     int height;
 private:
     bool active;

@@ -64,7 +64,7 @@ void Mesh::draw(Shader& shader)
     glBindVertexArray(0);
 }
 
-void Mesh::generateColider()
+void Mesh::generateCollider()
 {
     glm::vec3 min;
     glm::vec3 max;
@@ -86,5 +86,5 @@ void Mesh::generateColider()
             max.z = std::max(max.z, pos.z);
         }
     }
-    colider = Colider(min, max);
+    collider = Collider(min, max);
 }

@@ -6,7 +6,7 @@ void Model::draw(Shader &shader)
 {
 	for (unsigned int i = 0; i < meshes.size(); i++) {
 		meshes[i].draw(shader);
-		//meshes[i].colider.coliderDraw();
+		//meshes[i].collider.colliderDraw();
 	}
 }
 void Model::loadModel(string path)
@@ -39,7 +39,7 @@ void Model::processNode(aiNode* node, const aiScene* scene)
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].generateColider();
+		meshes[i].generateCollider();
 	}
 }
 
