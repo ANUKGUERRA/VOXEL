@@ -3,8 +3,8 @@
 #include <vec3.hpp>
 #include <string>
 #include <vector>
-#include "Shader.h"
-#include "Collider.h"
+#include "../Shader/Shader.h"
+#include "../Collider.h"
 
 using std::string;
 using std::vector;

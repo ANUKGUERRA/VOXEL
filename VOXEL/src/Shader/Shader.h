@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../include/libs.h"
+#include <iostream>
+#include <GL/glew.h>
+#include <glm.hpp>
 
 
 class Shader {

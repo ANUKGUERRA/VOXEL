@@ -30,31 +30,45 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\RendererComponent.cpp" />
+    <ClCompile Include="src\GameObject\ColliderComponent.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\GameObject\CameraComponent.cpp" />
+    <ClCompile Include="src\GameObject\InputComponent.cpp" />
+    <ClCompile Include="src\GameObject\GameObject.cpp" />
     <ClCompile Include="src\Collider.cpp" />
-    <ClCompile Include="src\ModelLoader.cpp" />
-    <ClCompile Include="src\ModelMesh.cpp" />
+    <ClCompile Include="src\3DModels\ModelLoader.cpp" />
+    <ClCompile Include="src\3DModels\ModelMesh.cpp" />
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\Cube.cpp" />
-    <ClCompile Include="src\Chunk.cpp" />
+    <ClCompile Include="src\Map\Cube.cpp" />
+    <ClCompile Include="src\Map\Chunk.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Map.cpp" />
-    <ClCompile Include="src\noise.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Map\Map.cpp" />
+    <ClCompile Include="src\Map\noise.cpp" />
+    <ClCompile Include="src\Shader\Shader.cpp" />
+    <ClCompile Include="src\GameObject\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\headers\RendererComponent.h" />
+    <ClInclude Include="src\GameObject\headers\ColliderComponent.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\GameObject\headers\CameraComponent.h" />
+    <ClInclude Include="src\GameObject\headers\Component.h" />
+    <ClInclude Include="src\GameObject\headers\InputComponent.h" />
+    <ClInclude Include="src\GameObject\headers\GameObject.h" />
     <ClInclude Include="include\libs.h" />
     <ClInclude Include="src\Collider.h" />
-    <ClInclude Include="src\ModelLoader.h" />
+    <ClInclude Include="src\3DModels\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\Cube.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Cantor.h" />
-    <ClInclude Include="src\Chunk.h" />
-    <ClInclude Include="src\FastNoiseLite.h" />
-    <ClInclude Include="src\Map.h" />
-    <ClInclude Include="src\ModelMesh.h" />
-    <ClInclude Include="src\noise.h" />
-    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Map\headers\Cube.h" />
+    <ClInclude Include="src\Map\headers\Cantor.h" />
+    <ClInclude Include="src\Map\headers\Chunk.h" />
+    <ClInclude Include="src\Map\headers\FastNoiseLite.h" />
+    <ClInclude Include="src\Map\headers\Map.h" />
+    <ClInclude Include="src\3DModels\ModelMesh.h" />
+    <ClInclude Include="src\Map\headers\noise.h" />
+    <ClInclude Include="src\Shader\Shader.h" />
+    <ClInclude Include="src\GameObject\headers\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="res\3DModels\backpack.obj">

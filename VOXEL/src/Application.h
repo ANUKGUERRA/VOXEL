@@ -1,17 +1,23 @@
 #pragma once
 
-#include "Camera.h"
-#include "Shader.h"
-#include "Map.h"
-#include "ModelLoader.h"
+#include "Shader/Shader.h"
+#include "Map/headers/Map.h"
+#include "3DModels/ModelLoader.h"
 #include <GLFW/glfw3.h>
+#include "Player.h"
 
 class Application {
 private:
     GLFWwindow* window;
-    Camera camera;
     Collider playerCollider;
     Collider playerGroundCollider;
+
+    Player player;
+    CameraComponent camera = *player.getComponent<CameraComponent>();
+    InputComponent input = *player.getComponent<InputComponent>();
+    TransformComponent transform = *player.getComponent<TransformComponent>();
+
+    
     
     Map map;
     float deltaTime;

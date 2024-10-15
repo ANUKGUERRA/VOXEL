@@ -1,8 +1,8 @@
-#include "Map.h"
+#include "headers/Map.h"
 #include <cmath>
-#include "Chunk.h"
-#include "Cantor.h"
-#include "Application.h"
+#include "headers/Chunk.h"
+#include "headers/Cantor.h"
+#include "../Application.h"
 
 
 Map::Map()

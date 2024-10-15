@@ -1,8 +1,7 @@
 #pragma once
-#pragma once
 #include <string>
 #include <vec3.hpp>
-#include "Shader.h"
+#include "Shader/Shader.h"
 
 class Collider
 {

@@ -1,4 +1,4 @@
-#include "Chunk.h"
+#include "headers/Chunk.h"
 #include <iostream>
 
 const glm::vec3 NORMALS[] = {
