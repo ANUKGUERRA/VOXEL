@@ -89,7 +89,7 @@ void Application::mainLoop() {
 
 		processInput();
 		
-		map.updateMap(transform.position.x, transform.position.z, *this);
+		map.updateMap(transform->position.x, transform->position.z, *this);
 
 		renderModel();
 
@@ -108,25 +108,25 @@ void Application::processInput()
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		input.processKeyboard(input.FORWARD, deltaTime);
+		input->processKeyboard(input->FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		input.processKeyboard(input.BACKWARD, deltaTime);
+		input->processKeyboard(input->BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		input.processKeyboard(input.LEFT, deltaTime);
+		input->processKeyboard(input->LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		input.processKeyboard(input.RIGHT, deltaTime);
+		input->processKeyboard(input->RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		input.processKeyboard(input.UP, deltaTime);
+		input->processKeyboard(input->UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		input.processKeyboard(input.DOWN, deltaTime);
+		input->processKeyboard(input->DOWN, deltaTime);
 }
 
 void Application::renderMap(Chunk* chunk)
 {
 	glUseProgram(mapShader.program);
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
-	glm::mat4 view = camera.getViewMatrix();
+	glm::mat4 projection = glm::perspective(glm::radians(camera->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
+	glm::mat4 view = camera->getViewMatrix();
 	glm::mat4 model = glm::mat4(1.0f);
 
 
@@ -135,7 +135,7 @@ void Application::renderMap(Chunk* chunk)
 	mapShader.setMat4("model", model);
 
 	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
-	mapShader.setVec3("viewPos", transform.position);
+	mapShader.setVec3("viewPos", transform->position);
 	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
 	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -151,7 +151,7 @@ void Application::renderModel()
 	glUseProgram(modelShader.program);
 
 	glm::mat4 projection = glm::perspective(glm::radians(player.getComponent<CameraComponent>()->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
-	glm::mat4 view = camera.getViewMatrix();
+	glm::mat4 view = camera->getViewMatrix();
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 35.0f, 0.0f)); 
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.02f, 0.02f, 0.02f)); 
@@ -159,7 +159,7 @@ void Application::renderModel()
 	modelShader.setMat4("projection", projection);
 	modelShader.setMat4("view", view);
 	modelShader.setMat4("model", modelMatrix);
-	modelShader.setVec3("viewPos", transform.position);
+	modelShader.setVec3("viewPos", transform->position);
 
 
 	modelShader.setVec3("light.position", glm::vec3(0.7f, 0.2f, 2.0f));
@@ -172,7 +172,7 @@ void Application::renderModel()
 	glUseProgram(0);
 }
 
-void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn) 
+void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	(float)widowWidth;
 	static bool firstMouse = true;
@@ -195,12 +195,12 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 	lastY = ypos;
 
 	Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-	app->input.processMouseMovement(xoffset, yoffset);
+	app->input->processMouseMovement(xoffset, yoffset);
 }
 
 void Application::processCollisions()
 {
-	playerCollider.setColliderPosition(transform.position + glm::vec3(-0.5f, -2, -0.5f), transform.position + glm::vec3(0.5f, 0, 0.5f));
+	playerCollider.setColliderPosition(transform->position + glm::vec3(-0.5f, -2, -0.5f), transform->position + glm::vec3(0.5f, 0, 0.5f));
 	playerGroundCollider.setColliderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
 
 	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
@@ -232,7 +232,7 @@ void Application::processCollisions()
 				resolution.z = (playerCollider.min.z < map.potentialCollisions[i]->min.z) ? -penetration.z : penetration.z;
 			}
 
-			transform.position += resolution;
+			transform->position += resolution;
 			playerCollider.min += resolution;
 			playerCollider.max += resolution;
 			playerGroundCollider.min += resolution;

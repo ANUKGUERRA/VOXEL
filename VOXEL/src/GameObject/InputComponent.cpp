@@ -16,7 +16,6 @@ void InputComponent::processKeyboard(Movement direction, float deltaTime) {
 void InputComponent::processMouseMovement(float xoffset, float yoffset) {
     m_mouseX += xoffset * m_mouseSensitivity;
     m_mouseY += yoffset * m_mouseSensitivity;
-    std::cout << xoffset << std::endl;
 }
 
 const glm::vec3& InputComponent::getMovement() const {

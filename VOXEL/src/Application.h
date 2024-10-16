@@ -13,9 +13,9 @@ private:
     Collider playerGroundCollider;
 
     Player player;
-    CameraComponent camera = *player.getComponent<CameraComponent>();
-    InputComponent input = *player.getComponent<InputComponent>();
-    TransformComponent transform = *player.getComponent<TransformComponent>();
+    CameraComponent *camera = player.getComponent<CameraComponent>();
+    InputComponent* input = player.getComponent<InputComponent>();
+    TransformComponent *transform = player.getComponent<TransformComponent>();
 
     
     

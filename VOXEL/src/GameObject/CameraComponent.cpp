@@ -27,7 +27,6 @@ void CameraComponent::update(const glm::vec3& position, float mouseX, float mous
     if (m_pitch < -89.0f) m_pitch = -89.0f;
 
     updateCameraVectors();
-    std::cout << mouseX << std::endl;
 }
 
 const glm::vec3& CameraComponent::getPosition() const {
