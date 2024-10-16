@@ -2,8 +2,6 @@
 #include "headers/noise.h"
 void generateNoise(int chunkX, int chunkZ, int chunkSize, Cube **blocks)
 {
-
-
     FastNoiseLite fastNoise;
     fastNoise.SetSeed(1);
     fastNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);

@@ -14,6 +14,7 @@ public:
     // Getters
     const glm::vec3& getPosition() const;
     const glm::vec3& getFront() const;
+    const glm::vec3& getRight() const;
     float getZoom() const;
 
 private:

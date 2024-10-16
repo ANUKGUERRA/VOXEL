@@ -13,7 +13,7 @@ public:
         DOWN
     };
 
-    void processKeyboard(Movement direction, float deltaTime);
+    void processMovement(Movement direction, float deltaTime);
     void processMouseMovement(float xoffset, float yoffset);
 
     // Getters
@@ -33,7 +33,7 @@ private:
     glm::vec3 m_movement{ 0.0f };
     float m_mouseX = 0.0f;
     float m_mouseY = 0.0f;
-    float m_movementSpeed = 2.5f;
+    float m_movementSpeed = 105.0f;
     float m_jumpStrength = 10.0f;
     float m_mouseSensitivity = 0.1f;
 };

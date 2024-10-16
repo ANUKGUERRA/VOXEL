@@ -4,13 +4,11 @@
 #include "Map/headers/Map.h"
 #include "3DModels/ModelLoader.h"
 #include <GLFW/glfw3.h>
-#include "Player.h"
+#include "GameObjects/Player.h"
 
 class Application {
 private:
     GLFWwindow* window;
-    Collider playerCollider;
-    Collider playerGroundCollider;
 
     Player player;
     CameraComponent *camera = player.getComponent<CameraComponent>();

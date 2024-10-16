@@ -7,7 +7,7 @@ public:
     Component() : gameObject(nullptr) {}
     virtual ~Component() = default;
 
-    void setGameObject(GameObject* gameObject) { gameObject = gameObject; }
+    void setGameObject(GameObject* i_gameObject) { gameObject = i_gameObject; }
     GameObject* getGameObject() const { return gameObject; }
 
 protected:

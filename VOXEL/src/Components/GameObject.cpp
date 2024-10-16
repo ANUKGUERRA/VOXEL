@@ -12,5 +12,5 @@ GameObject::~GameObject() {
     gameObjects.erase(std::remove(gameObjects.begin(), gameObjects.end(), this), gameObjects.end());
 }
 
-void GameObject::update(float deltaTime) {
-}
+void GameObject::update(float deltaTime) {}
+void GameObject::start() {}

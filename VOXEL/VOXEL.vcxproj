@@ -30,13 +30,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameObject\RendererComponent.cpp" />
-    <ClCompile Include="src\GameObject\ColliderComponent.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\GameObject\CameraComponent.cpp" />
-    <ClCompile Include="src\GameObject\InputComponent.cpp" />
-    <ClCompile Include="src\GameObject\GameObject.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\GameObjects\Chunk.cpp" />
+    <ClCompile Include="src\GameObjects\Cube.cpp" />
+    <ClCompile Include="src\Components\RendererComponent.cpp" />
+    <ClCompile Include="src\Components\ColliderComponent.cpp" />
+    <ClCompile Include="src\GameObjects\Player.cpp" />
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
+    <ClCompile Include="src\Components\InputComponent.cpp" />
+    <ClCompile Include="src\Components\GameObject.cpp" />
     <ClCompile Include="src\3DModels\ModelLoader.cpp" />
     <ClCompile Include="src\3DModels\ModelMesh.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -46,18 +47,19 @@
     <ClCompile Include="src\Map\Map.cpp" />
     <ClCompile Include="src\Map\noise.cpp" />
     <ClCompile Include="src\Shader\Shader.cpp" />
-    <ClCompile Include="src\GameObject\TransformComponent.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameObject\headers\RendererComponent.h" />
-    <ClInclude Include="src\GameObject\headers\ColliderComponent.h" />
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\GameObject\headers\CameraComponent.h" />
-    <ClInclude Include="src\GameObject\headers\Component.h" />
-    <ClInclude Include="src\GameObject\headers\InputComponent.h" />
-    <ClInclude Include="src\GameObject\headers\GameObject.h" />
+    <ClInclude Include="src\GameObjects\Chunk.h" />
+    <ClInclude Include="src\GameObjects\Cube.h" />
+    <ClInclude Include="src\Components\headers\RendererComponent.h" />
+    <ClInclude Include="src\Components\headers\ColliderComponent.h" />
+    <ClInclude Include="src\GameObjects\Player.h" />
+    <ClInclude Include="src\Components\headers\CameraComponent.h" />
+    <ClInclude Include="src\Components\headers\Component.h" />
+    <ClInclude Include="src\Components\headers\InputComponent.h" />
+    <ClInclude Include="src\Components\headers\GameObject.h" />
     <ClInclude Include="include\libs.h" />
-    <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\3DModels\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Map\headers\Cube.h" />
@@ -68,7 +70,7 @@
     <ClInclude Include="src\3DModels\ModelMesh.h" />
     <ClInclude Include="src\Map\headers\noise.h" />
     <ClInclude Include="src\Shader\Shader.h" />
-    <ClInclude Include="src\GameObject\headers\TransformComponent.h" />
+    <ClInclude Include="src\Components\headers\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="res\3DModels\backpack.obj">

@@ -1,15 +1,19 @@
 #include "headers/InputComponent.h"
 #include "iostream"
+#include "headers/CameraComponent.h"
 
-void InputComponent::processKeyboard(Movement direction, float deltaTime) {
+void InputComponent::processMovement(Movement direction, float deltaTime) {
+    glm::vec3 front = this->gameObject->getComponent<CameraComponent>()->getFront();
+    glm::vec3 right = this->gameObject->getComponent<CameraComponent>()->getRight();
+
     float velocity = m_movementSpeed * deltaTime;
     switch (direction) {
-    case FORWARD:  m_movement.z -= velocity; break;
-    case BACKWARD: m_movement.z += velocity; break;
-    case LEFT:     m_movement.x -= velocity; break;
-    case RIGHT:    m_movement.x += velocity; break;
-    case UP:       m_movement.y += m_jumpStrength * deltaTime; break;
-    case DOWN:     m_movement.y -= velocity; break;
+    case FORWARD:  m_movement += front * velocity; break;
+    case BACKWARD: m_movement -= front * velocity; break;
+    case LEFT:     m_movement -= right * velocity; break;
+    case RIGHT:    m_movement += right * velocity; break;
+    case UP:       m_movement += m_jumpStrength * deltaTime; break;
+    case DOWN:     m_movement -= velocity; break;
     }
 }
 

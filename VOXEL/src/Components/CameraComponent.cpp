@@ -36,6 +36,9 @@ const glm::vec3& CameraComponent::getPosition() const {
 const glm::vec3& CameraComponent::getFront() const {
     return m_front;
 }
+const glm::vec3& CameraComponent::getRight() const {
+    return m_right;
+}
 
 float CameraComponent::getZoom() const {
     return m_zoom;

@@ -13,7 +13,7 @@ Application::Application()
 	
 	map.loadMap();
 
-	importedModel = new Model("res/3DModels/Livinglegend.fbx");
+	//importedModel = new Model("res/3DModels/Livinglegend.fbx");
 
 	mapShader.load("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
 	modelShader.load("res/shaders/modelVertex.glsl", "res/shaders/modelFragment.glsl");
@@ -108,17 +108,17 @@ void Application::processInput()
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		input->processKeyboard(input->FORWARD, deltaTime);
+		input->processMovement(input->FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		input->processKeyboard(input->BACKWARD, deltaTime);
+		input->processMovement(input->BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		input->processKeyboard(input->LEFT, deltaTime);
+		input->processMovement(input->LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		input->processKeyboard(input->RIGHT, deltaTime);
+		input->processMovement(input->RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		input->processKeyboard(input->UP, deltaTime);
+		input->processMovement(input->UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		input->processKeyboard(input->DOWN, deltaTime);
+		input->processMovement(input->DOWN, deltaTime);
 }
 
 void Application::renderMap(Chunk* chunk)
@@ -198,53 +198,53 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 	app->input->processMouseMovement(xoffset, yoffset);
 }
 
-void Application::processCollisions()
-{
-	playerCollider.setColliderPosition(transform->position + glm::vec3(-0.5f, -2, -0.5f), transform->position + glm::vec3(0.5f, 0, 0.5f));
-	playerGroundCollider.setColliderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
-
-	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
-
-	bool isGrounded = false;
-	for (int i = 0; i < map.potentialCollisions.size(); i++)
-	{
-		bool collidingWithGround = playerGroundCollider.intersects(*map.potentialCollisions[i]);
-		if (playerCollider.intersects(*map.potentialCollisions[i]) || collidingWithGround)
-		{
-			glm::vec3 penetration = glm::min(playerCollider.max, map.potentialCollisions[i]->max) - glm::max(playerCollider.min, map.potentialCollisions[i]->min);
-
-			glm::vec3 resolution(0.0f);
-			if (penetration.x < penetration.y && penetration.x < penetration.z)
-			{
-				resolution.x = (playerCollider.min.x < map.potentialCollisions[i]->min.x) ? -penetration.x : penetration.x;
-			}
-			else if (penetration.y < penetration.z)
-			{
-				resolution.y = (playerCollider.min.y < map.potentialCollisions[i]->min.y) ? -penetration.y : penetration.y;
-				if (collidingWithGround && resolution.y > 0)
-				{
-					isGrounded = true;
-					//camera.m_velocity.y = 0;
-				}
-			}
-			else
-			{
-				resolution.z = (playerCollider.min.z < map.potentialCollisions[i]->min.z) ? -penetration.z : penetration.z;
-			}
-
-			transform->position += resolution;
-			playerCollider.min += resolution;
-			playerCollider.max += resolution;
-			playerGroundCollider.min += resolution;
-			playerGroundCollider.max += resolution;
-		}
-	}
-
-	if (!isGrounded)
-	{
-		//transform.position = ApplyGravity(transform.position, camera.m_velocity, deltaTime, 9.81f);
-	}
-} 
+//void Application::processCollisions()
+//{
+//	playerCollider.setColliderPosition(transform->position + glm::vec3(-0.5f, -2, -0.5f), transform->position + glm::vec3(0.5f, 0, 0.5f));
+//	playerGroundCollider.setColliderPosition(playerCollider.min - glm::vec3(0, 0.1f, 0), playerCollider.max);
+//
+//	map.potentialCollisions = map.getPotentialCollisions(playerCollider);
+//
+//	bool isGrounded = false;
+//	for (int i = 0; i < map.potentialCollisions.size(); i++)
+//	{
+//		bool collidingWithGround = playerGroundCollider.intersects(*map.potentialCollisions[i]);
+//		if (playerCollider.intersects(*map.potentialCollisions[i]) || collidingWithGround)
+//		{
+//			glm::vec3 penetration = glm::min(playerCollider.max, map.potentialCollisions[i]->max) - glm::max(playerCollider.min, map.potentialCollisions[i]->min);
+//
+//			glm::vec3 resolution(0.0f);
+//			if (penetration.x < penetration.y && penetration.x < penetration.z)
+//			{
+//				resolution.x = (playerCollider.min.x < map.potentialCollisions[i]->min.x) ? -penetration.x : penetration.x;
+//			}
+//			else if (penetration.y < penetration.z)
+//			{
+//				resolution.y = (playerCollider.min.y < map.potentialCollisions[i]->min.y) ? -penetration.y : penetration.y;
+//				if (collidingWithGround && resolution.y > 0)
+//				{
+//					isGrounded = true;
+//					//camera.m_velocity.y = 0;
+//				}
+//			}
+//			else
+//			{
+//				resolution.z = (playerCollider.min.z < map.potentialCollisions[i]->min.z) ? -penetration.z : penetration.z;
+//			}
+//
+//			transform->position += resolution;
+//			playerCollider.min += resolution;
+//			playerCollider.max += resolution;
+//			playerGroundCollider.min += resolution;
+//			playerGroundCollider.max += resolution;
+//		}
+//	}
+//
+//	if (!isGrounded)
+//	{
+//		//transform.position = ApplyGravity(transform.position, camera.m_velocity, deltaTime, 9.81f);
+//	}
+//} 
 
 glm::vec3 Application::ApplyGravity(glm::vec3 position, glm::vec3 &velocity, float deltaTime, float gravityStrength) {
 	velocity.y -= gravityStrength * deltaTime;

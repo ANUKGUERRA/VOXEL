@@ -36,6 +36,7 @@ public:
     }
 
     virtual void update(float deltaTime);
+    virtual void start();
 
     static std::vector<GameObject*> gameObjects;
 
