@@ -95,6 +95,7 @@ void Application::mainLoop() {
 
 		processCollisions();
 		
+		player.update(deltaTime);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();		
@@ -197,8 +198,6 @@ void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yp
 	app->input.processMouseMovement(xoffset, yoffset);
 }
 
-
-
 void Application::processCollisions()
 {
 	playerCollider.setColliderPosition(transform.position + glm::vec3(-0.5f, -2, -0.5f), transform.position + glm::vec3(0.5f, 0, 0.5f));
@@ -246,7 +245,6 @@ void Application::processCollisions()
 		//transform.position = ApplyGravity(transform.position, camera.m_velocity, deltaTime, 9.81f);
 	}
 } 
-
 
 glm::vec3 Application::ApplyGravity(glm::vec3 position, glm::vec3 &velocity, float deltaTime, float gravityStrength) {
 	velocity.y -= gravityStrength * deltaTime;

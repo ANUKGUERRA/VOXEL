@@ -1,19 +1,22 @@
 #pragma once
 
-
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
+#include <vector>
 
-#include "Component.h"
-
+class Component;
 
 class GameObject {
 public:
+    GameObject();
+    virtual ~GameObject();
+
     template<typename T, typename... Args>
     T* addComponent(Args&&... args) {
         auto component = std::make_unique<T>(std::forward<Args>(args)...);
         T* componentPtr = component.get();
+        componentPtr->setGameObject(this);
         m_components[std::type_index(typeid(T))] = std::move(component);
         return componentPtr;
     }
@@ -32,22 +35,10 @@ public:
         m_components.erase(std::type_index(typeid(T)));
     }
 
-    virtual void update(float deltaTime) {
-    }
+    virtual void update(float deltaTime);
+
+    static std::vector<GameObject*> gameObjects;
 
 private:
     std::unordered_map<std::type_index, std::unique_ptr<Component>> m_components;
 };
-
-
-
-//class Enemy : public GameObject {
-//public:
-//    Enemy() {
-//        addComponent<TransformComponent>();
-//        addComponent<ColliderComponent>();
-//    }
-//
-//    void update(float deltaTime) override {
-//    }
-//};
