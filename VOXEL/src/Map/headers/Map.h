@@ -1,14 +1,14 @@
-#pragma once
+#ifndef MAP_H
+#define MAP_H
 #include <unordered_map>
-#include "Chunk.h"
+#include "../../GameObjects/Chunk.h"
 
-class Application;
 struct vec2
 {
-	float x;
-	float z;
+	int x;
+	int z;
 	vec2() : x(x), z(z) {}
-	vec2(float x, float z) : x(x), z(z) {}
+	vec2(int x, int z) : x(x), z(z) {}
 };
 
 class Map
@@ -17,17 +17,19 @@ public:
 	Map();
 	~Map();
 
-	void updateMap(float camX, float camZ, Application& app);
-	void loadMap();
-	std::vector<ColliderComponent*> getPotentialCollisions(const ColliderComponent& playerCollider);
-	std::vector<ColliderComponent*> potentialCollisions;
+	void updateMap(float camX, float camZ);
+	//std::vector<ColliderComponent*> getPotentialCollisions(const ColliderComponent& playerCollider);
+	//std::vector<ColliderComponent*> potentialCollisions;
+	void initializeMap();
 
 private:
-	void loadAreaChunks();
-	void drawAreaChunks(Application& app);
+	void loadNewChunks(int dx, int dz);
+	void removeOldChunks(int dx, int dz);
+	//void drawAreaChunks(Application& app);
 	int nChunks = 5;
-	vec2 currentChunk = { 0.f,0.f };
+	vec2 currentChunk = { 0,0 };
 	
 	std::unordered_map<int, Chunk*> chunks;
 
 };
+#endif

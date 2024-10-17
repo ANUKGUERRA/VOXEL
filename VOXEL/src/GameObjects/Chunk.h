@@ -5,6 +5,8 @@
 #include "Cube.h"
 class Chunk : public GameObject
 {
+public:
+
 	Chunk(int chunkX, int chunkY);
 	~Chunk();
 	RendererComponent *renderer;
@@ -18,7 +20,7 @@ class Chunk : public GameObject
 	Cube **cubes;
 	static const int chunkSize = 64;
 	bool xNeg, xPos, yNeg, yPos, zNeg, zPos;
-	int chunkX, chunkY;
+	int chunkX, chunkZ;
 
 	std::vector<RendererComponent::Vertex> vertices;
 	std::vector<int> indices;

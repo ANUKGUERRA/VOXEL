@@ -2,7 +2,7 @@
 
 Cube::Cube()
 {
-
+    collider = addComponent<ColliderComponent>();
 }
 
 const int Cube::cubeIndices[6][6] = {
@@ -47,11 +47,11 @@ const int Cube::faceVertices[6][4][3] = {
 };
 
 
-void start()
+void Cube::start()
 {
     
 }
-void update() 
+void Cube::update(float deltaTime)
 {
 
 }

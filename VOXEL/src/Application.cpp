@@ -1,17 +1,18 @@
 #include "Application.h"
 #include "../include/libs.h"
-#include "Map/headers/noise.h"
 
 int Application::widowWidth = 900;
 int Application::windowHeight = 800;
+
+CameraComponent*	Application::camera = player.getComponent<CameraComponent>();
+InputComponent*		Application::input = player.getComponent<InputComponent>();
+TransformComponent* Application::transform = player.getComponent<TransformComponent>();
 
 Application::Application()
 	: window(nullptr){
 	initializeGLFW();
 	createWindow();
 	setupOpenGL();
-	
-	map.loadMap();
 
 	//importedModel = new Model("res/3DModels/Livinglegend.fbx");
 
@@ -89,13 +90,15 @@ void Application::mainLoop() {
 
 		processInput();
 		
-		map.updateMap(transform->position.x, transform->position.z, *this);
+		map.updateMap(transform->position.x, transform->position.z);
 
-		renderModel();
+		//renderModel();
 
-		processCollisions();
-		
-		player.update(deltaTime);
+		//processCollisions();
+		for (auto& gameObject : GameObject::gameObjects) {
+			gameObject->update(deltaTime);
+		}
+		//player.update(deltaTime);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();		
@@ -121,56 +124,56 @@ void Application::processInput()
 		input->processMovement(input->DOWN, deltaTime);
 }
 
-void Application::renderMap(Chunk* chunk)
-{
-	glUseProgram(mapShader.program);
+//void Application::renderMap(Chunk* chunk)
+//{
+//	glUseProgram(mapShader.program);
+//
+//	glm::mat4 projection = glm::perspective(glm::radians(camera->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
+//	glm::mat4 view = camera->getViewMatrix();
+//	glm::mat4 model = glm::mat4(1.0f);
+//
+//
+//	mapShader.setMat4("projection", projection);
+//	mapShader.setMat4("view", view);
+//	mapShader.setMat4("model", model);
+//
+//	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
+//	mapShader.setVec3("viewPos", transform->position);
+//	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
+//	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+//
+//
+//	chunk->draw();
+//
+//	glUseProgram(0);
+//}
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
-	glm::mat4 view = camera->getViewMatrix();
-	glm::mat4 model = glm::mat4(1.0f);
-
-
-	mapShader.setMat4("projection", projection);
-	mapShader.setMat4("view", view);
-	mapShader.setMat4("model", model);
-
-	mapShader.setVec3("lightDir", glm::vec3(0.7f, -0.4f, 0.6f));
-	mapShader.setVec3("viewPos", transform->position);
-	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
-	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
-
-
-	chunk->draw();
-
-	glUseProgram(0);
-}
-
-void Application::renderModel() 
-{
-	(float)widowWidth;
-	glUseProgram(modelShader.program);
-
-	glm::mat4 projection = glm::perspective(glm::radians(player.getComponent<CameraComponent>()->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
-	glm::mat4 view = camera->getViewMatrix();
-	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 35.0f, 0.0f)); 
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.02f, 0.02f, 0.02f)); 
-
-	modelShader.setMat4("projection", projection);
-	modelShader.setMat4("view", view);
-	modelShader.setMat4("model", modelMatrix);
-	modelShader.setVec3("viewPos", transform->position);
-
-
-	modelShader.setVec3("light.position", glm::vec3(0.7f, 0.2f, 2.0f));
-	modelShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-	modelShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-	modelShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-	importedModel->draw(modelShader);
-
-	glUseProgram(0);
-}
+//void Application::renderModel() 
+//{
+//	(float)widowWidth;
+//	glUseProgram(modelShader.program);
+//
+//	glm::mat4 projection = glm::perspective(glm::radians(player.getComponent<CameraComponent>()->getZoom()), (float)widowWidth / (float)windowHeight, 0.1f, 1000.0f);
+//	glm::mat4 view = camera->getViewMatrix();
+//	glm::mat4 modelMatrix = glm::mat4(1.0f);
+//	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 35.0f, 0.0f)); 
+//	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.02f, 0.02f, 0.02f)); 
+//
+//	modelShader.setMat4("projection", projection);
+//	modelShader.setMat4("view", view);
+//	modelShader.setMat4("model", modelMatrix);
+//	modelShader.setVec3("viewPos", transform->position);
+//
+//
+//	modelShader.setVec3("light.position", glm::vec3(0.7f, 0.2f, 2.0f));
+//	modelShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+//	modelShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+//	modelShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//
+//	importedModel->draw(modelShader);
+//
+//	glUseProgram(0);
+//}
 
 void Application::mouseMoveCallback(GLFWwindow* window, double xposIn, double yposIn)
 {

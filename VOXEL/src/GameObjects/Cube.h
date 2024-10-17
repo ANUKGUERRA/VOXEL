@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CUBE_H
+#define CUBE_H
+
 #include "../Components/headers/Component.h"
 #include "../Components/headers/ColliderComponent.h"
 #include <vec2.hpp>
@@ -12,9 +14,11 @@ public:
 	static const glm::vec3 normals[6];
 	static const glm::vec2 uv[24];
 	static const int cubeIndices[6][6];
+	int worldX, worldZ;
 	int height;
 
 	void start() override;
 	void update(float deltaTime) override;
 };
+#endif
 

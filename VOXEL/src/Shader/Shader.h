@@ -13,6 +13,8 @@ public:
     void setInt(const std::string& name, const int value);
     void setMat4(const std::string& name, const glm::mat4& mat);
     void setVec3(const std::string& name, const glm::vec3& mat);
+    void use();
+    void unuse();
     GLuint program;
 
 private:

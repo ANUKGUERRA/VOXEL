@@ -62,7 +62,6 @@
     <ClInclude Include="include\libs.h" />
     <ClInclude Include="src\3DModels\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\Map\headers\Cube.h" />
     <ClInclude Include="src\Map\headers\Cantor.h" />
     <ClInclude Include="src\Map\headers\Chunk.h" />
     <ClInclude Include="src\Map\headers\FastNoiseLite.h" />

@@ -11,6 +11,9 @@ Shader::~Shader() {
     glDeleteProgram(program);
 }
 
+void Shader::use() { glUseProgram(program); }
+void Shader::unuse() { glUseProgram(0); }
+
 void Shader::load(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string vertexCode = readFile(vertexPath);
     std::string fragmentCode = readFile(fragmentPath);

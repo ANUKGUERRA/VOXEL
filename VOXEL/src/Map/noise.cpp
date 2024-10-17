@@ -1,5 +1,5 @@
-#include <iostream>
 #include "headers/noise.h"
+#include <iostream>
 void generateNoise(int chunkX, int chunkZ, int chunkSize, Cube **blocks)
 {
     FastNoiseLite fastNoise;

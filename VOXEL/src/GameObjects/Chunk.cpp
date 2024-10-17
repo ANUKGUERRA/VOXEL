@@ -1,10 +1,12 @@
 #include "Chunk.h"
 
-Chunk::Chunk(int chunkX, int chunkY) : chunkX(chunkX), chunkY(chunkY)
+Chunk::Chunk(int chunkX, int chunkZ) : chunkX(chunkX), chunkZ(chunkZ)
 {
+	renderer = addComponent<RendererComponent>();
 	cubes = new Cube *[chunkSize];
 	for (int i = 0; i < chunkSize; i++)
 		cubes[i] = new Cube[chunkSize];
+	start();
 }
 Chunk::~Chunk()
 {
@@ -68,7 +70,8 @@ void Chunk::generateCubeData(int x, int y, int z)
 
 void Chunk::start()
 {
-	//generateNoise(0, 0, chunkSize, cubes);
+	generateNoise(chunkX, chunkZ, chunkSize, cubes);
+	
 }
 
 void::Chunk::update(float deltaTime)
