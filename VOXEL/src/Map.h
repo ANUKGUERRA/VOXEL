@@ -25,7 +25,7 @@ public:
 private:
 	void loadAreaChunks();
 	void drawAreaChunks(Application& app);
-	int nChunks = 10;
+	int nChunks = 0;
 	vec2 currentChunk = { 0.f,0.f };
 	
 	std::unordered_map<int, Chunk*> chunks;

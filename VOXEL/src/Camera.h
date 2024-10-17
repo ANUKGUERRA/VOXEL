@@ -73,16 +73,20 @@ public:
         switch (direction)
         {
         case FORWARD:
-            Position += Front * velocity;
+            Position.x += Front.x * velocity;
+            Position.z += Front.z * velocity;
             break;
         case BACKWARD:
-            Position -= Front * velocity;
+            Position.z -= Front.z * velocity;
+            Position.x -= Front.x * velocity;
             break;
         case LEFT:
-            Position -= Right * velocity;
+            Position.x -= Right.x * velocity;
+            Position.z -= Right.z * velocity;
             break;
         case RIGHT:
-            Position += Right * velocity;
+            Position.x += Right.x * velocity;
+            Position.z += Right.z * velocity;
             break;
         case UP:
             Position += WorldUp * velocity * 5.f;
