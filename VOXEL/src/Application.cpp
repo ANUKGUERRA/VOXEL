@@ -98,7 +98,7 @@ void Application::mainLoop() {
 		
 
 		glfwSwapBuffers(window);
-		glfwPollEvents();		
+		glfwPollEvents();
 	}
 }
 
@@ -138,6 +138,8 @@ void Application::renderMap(Chunk* chunk)
 	mapShader.setVec3("viewPos", camera.Position);
 	mapShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f)); 
 	mapShader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
+	mapShader.setInt("texture1", 0);
 
 
 	chunk->draw();

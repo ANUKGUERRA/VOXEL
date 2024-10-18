@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libs.h" />
+    <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Application.h" />
@@ -50,7 +51,6 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Cantor.h" />
     <ClInclude Include="src\Chunk.h" />
-    <ClInclude Include="src\FastNoiseLite.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\ModelMesh.h" />
     <ClInclude Include="src\noise.h" />
@@ -61,6 +61,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\1.jpg" />
+    <Image Include="res\2.jpg" />
+    <Image Include="res\3.jpg" />
+    <Image Include="res\4.jpg" />
+    <Image Include="res\696.jpg" />
+    <Image Include="res\brickGround.jpg" />
+    <Image Include="res\rock.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -126,7 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\stb;$(SolutionDir)Dependencies\noiseLite</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
