@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Main.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Graphics\Material.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Systems.cpp" />
+    <ClCompile Include="src\Animation\Animation.cpp" />
+    <ClCompile Include="src\Core\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\libs.h" />
+    <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Core\config.h" />
+    <ClInclude Include="src\Graphics\Material.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\Components.h" />
+    <ClInclude Include="src\Scene\Systems.h" />
+    <ClInclude Include="src\Animation\Animation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assimp-vc143-mt.dll" />
+    <None Include="res\shaders\vertex.glsl" />
+    <None Include="res\shaders\fragment.glsl" />
+    <None Include="res\shaders\animation.vs" />
+    <None Include="res\shaders\animation.frs" />
+    <None Include="res\shaders\map.frs" />
+    <None Include="res\shaders\map.vs" />
+    <None Include="res\shaders\btn.frs" />
+    <None Include="res\shaders\btn.vs" />
+    <None Include="res\shaders\text.frs" />
+    <None Include="res\shaders\text.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\brickGround.jpg" />
+    <Image Include="res\ui.png" />
+    <Image Include="res\textures\brickGround2.png" />
+  </ItemGroup>
+</Project>

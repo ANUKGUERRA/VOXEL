@@ -1,0 +1,57 @@
+#version 330 core
+
+in vec2 TexCoords;
+in vec3 Normal;
+in vec3 FragPos;
+flat in ivec4 BoneIDs;
+in vec4 BoneWeights;
+
+out vec4 FragColor;
+
+uniform sampler2D texture_diffuse1;
+
+void main()
+{
+    vec4 texColor = texture(texture_diffuse1, TexCoords);
+    
+    // Visualize bone weights
+    vec4 weightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    
+    // Assign colors based on bone weights
+    weightColor.r = BoneWeights.x;
+    weightColor.g = BoneWeights.y;
+    weightColor.b = BoneWeights.z;
+    weightColor.a = BoneWeights.w;
+    
+
+
+    //vec4 texColor = texture(texture_diffuse1, TexCoords);
+
+    //FragColor = texColor;
+
+    //FragColor = vec4(TexCoords, 0.0, 1.0);
+
+    FragColor = vec4(0.7, 0.3, 0.3, 1.0);
+
+
+    //if (TexCoords == vec2(0.0))
+    //FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+    //else
+    //FragColor = vec4(TexCoords, 0.0, 1.0);
+
+    //for(int i = 0; i < 4; i++)
+    //{
+    //    if(BoneIDs[i] == 25){
+    //        if(BoneWeights[i] >= 0.7){
+    //        FragColor = vec4(1.0,0.0,0.0,0.0) * BoneWeights[i];
+    //        }
+    //        else if(BoneWeights[i] >= 0.4 && BoneWeights[i] <= 0.6){
+    //        FragColor = vec4(0.0,1.0,0.0,0.0) * BoneWeights[i];
+    //        }
+    //        else if(BoneWeights[i] >= 0.1){
+    //        FragColor = vec4(1.0,1.0,0.0,0.0) * BoneWeights[i];
+    //        }
+    //    }
+    //}
+    //FragColor = mix(texColor, weightColor, 0.5);
+}
